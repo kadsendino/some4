@@ -14,7 +14,7 @@ cd some4
 uv add manim
 ```
 
-Run manim example Scene `CreateCircle` from `main.py`:
+Run manim example scene `CreateCircle` from `main.py`:
 
 ```
 uv run manim -pql main.py CreateCircle
