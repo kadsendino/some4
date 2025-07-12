@@ -30,4 +30,4 @@ For documentation please visit the [Manim Community Website](https://github.com/
 
 ## License
 
-See [MIT License](https://raw.githubusercontent.com/kadsendino/some4/refs/heads/main/LICENSE).
+See [MIT License](https://github.com/kadsendino/some4?tab=MIT-1-ov-file).
