@@ -26,7 +26,7 @@ To create scenes please use the `main` branch but different files than `main.py`
 
 ## Documentation
 
-For documentation please visit the [Manim Community Website](https://docs.manim.community/en/stable/tutorials_guides.html).
+For documentation please visit the [Manim Community Website](https://github.com/kadsendino/some4?tab=MIT-1-ov-file#readme).
 
 ## License
 
