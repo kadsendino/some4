@@ -1,2 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:/home/maximilian/repos/some4/media/videos/main/480p15/partial_movie_files/CreateCircle/1185818338_3120274435_223132457.mp4'
