@@ -22,4 +22,8 @@ uv run manim -pql main.py CreateCircle
 
 ## Contribution
 
+## Documentation
+
+For documentation please visit the [Manim Community Website](https://docs.manim.community/en/stable/tutorials_guides.html).
+
 ## License
