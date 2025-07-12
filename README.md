@@ -22,7 +22,7 @@ uv run manim -pql main.py CreateCircle
 
 ## Contribution
 
-To create Scene please use the `main` branch but different files than `main.py`. In the end the finished scenes will be combined in `main.py`.
+To create scenes please use the `main` branch but different files than `main.py`. In the end the finished scenes will be combined in `main.py`.
 
 ## Documentation
 
