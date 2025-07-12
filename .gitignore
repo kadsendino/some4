@@ -210,3 +210,7 @@ __marimo__/
 
 # Ignoring Media
 /media
+
+# pycharm ignore
+/.idea
+run_some.sh
