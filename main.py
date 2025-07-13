@@ -134,8 +134,9 @@ def CreatePosit(str : str,es_value : int):
 
 
 
-class NewScence(Scene):
+class NewScene(Scene):
     def construct(self):
+        #float vs. posits
         binary_str =  "0100101100010100"
         binary_str2 = "0100010101001010"
         float_bin = CreateFloat(binary_str)
@@ -147,6 +148,28 @@ class NewScence(Scene):
         self.play(
             Create(float_bin),Create(float_bin2),Create(intro)
             )
+        self.wait
+        #Scene 2 with Arrow moving allong
+        self.play(Uncreate(float_bin),Uncreate(intro))
+        first_text = Text("Lets look into posits first!")
+        first_text.scale(1.5)
+        first_text.to_edge(UP)
+        self.play(
+            Create(first_text)
+        )
+        arrow = Arrow(start=DOWN*2, end=ORIGIN, color=RED)
+        arrow.to_edge(LEFT)
+        arrow.shift(RIGHT*0.2)
+        self.add(arrow)
+        self.wait(6)
+        # step by step, hard 
+        for i in range (15):
+            arrow.shift(RIGHT*0.815)
+            arrow.update
+            self.wait(0.5)
+        # allong a line, smooth
+        #l1 = Line(start=arrow.get_center(),end=arrow.get_center()+RIGHT*12.5)
+        #self.play(MoveAlongPath(arrow, l1), rate_func=linear,run_time=5)
         self.wait
 
 
