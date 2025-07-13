@@ -66,7 +66,7 @@ class SmartLabeledArc(Scene):
             self.add(label)
             self.add(label2)
 
-        self.wait()
+        self.wait(1)
 
 class Formula(Scene):
     def construct(self):
