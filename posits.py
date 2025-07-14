@@ -1,4 +1,3 @@
-from typing_extensions import runtime
 from manim import *
 
 def color_posit(text,es=2):
@@ -24,6 +23,32 @@ def color_posit(text,es=2):
             text[i].set_color(BLUE)
 
     return text
+
+
+def create_label_list():
+    binary_strings = [
+        "0000", "0001", "001x", "01xx", "10xx", "110x", "1110", "1111"
+    ]
+
+    list = []
+    for binary in binary_strings:
+        bin_group = VGroup()
+        for i, char in enumerate(binary):
+            if char == "x":
+                t = MathTex(r"\times", font_size=16).set_color(GRAY)
+                bin_group.add(t)
+            else:
+                t = MathTex(char, font_size=16)
+                if binary.startswith("0") and char == "1":
+                    t.set_color(DARK_BROWN)  # DARK_BROWN = terminierendes 1 (negativ)
+                elif binary.startswith("1") and char == "0" and i >= 1:
+                    t.set_color(DARK_BROWN)  # terminierendes 0 (positiv)
+                else:
+                    t.set_color(YELLOW)
+                bin_group.add(t)
+        bin_group.arrange(RIGHT, buff=0.02)
+        list.append(bin_group)
+    return list
 
 class SmartLabeledArc(Scene):
     def construct(self):
@@ -270,9 +295,60 @@ class Formula(Scene):
         self.wait()
         # Ende von Tabelle
 
+        self.smartlabeledarc()
+
         self.play(FadeOut(es_group), run_time=0.8)
         self.wait()
 
         self.play(FadeIn(useed_k), run_time=0.8)
+        self.wait()
+
+        return es_group
+
+    def smartlabeledarc(self):
+        radius = 2.5
+        start_angle = 3 * PI / 2
+        arc_angle = PI
+        arc = Arc(radius=radius, angle=arc_angle, start_angle=start_angle,color=DARK_BLUE)
+        arc.shift(LEFT)
+        self.play(Create(arc))
+
+        center = arc.get_center()
+
+        label_list = create_label_list()
+
+        label2_list = [
+            r"\frac{1}{4096}", r"\frac{1}{256}", 
+            r"\frac{1}{16}",
+            r"1", r"16", r"256" ]
+
+        visual_elements = VGroup(arc)
+        num_points = len(label2_list)
+        for i in range(num_points):
+            alpha = i / (num_points - 1)
+            point = arc.point_from_proportion(alpha)
+
+            dot = Dot(point,radius=0.05)
+            self.add(dot)
+
+            direction = (point - center)
+            direction_normalized = direction / np.linalg.norm(direction)
+
+            label = label_list[i]
+
+            label.move_to(point + 0.3 * direction_normalized + RIGHT * 0.1)
+            label2 = MathTex(label2_list[i], font_size=15)
+            label2.move_to(point - 0.3 * direction_normalized)
+
+            visual_elements.add(dot, label, label2)
+            self.add(dot, label, label2)
+
+            self.add(label)
+            self.add(label2)
+
+        self.wait(1)
+
+        # Alles auf einmal verschwinden lassen
+        self.play(FadeOut(visual_elements), run_time=1)
         self.wait()
 
