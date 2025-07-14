@@ -27,39 +27,39 @@ def create_label_list():
 
 class Formula(Scene):
     def construct(self):
-        number = MathTex(
-            r"(-1)^{sign} \cdot useed^k \cdot 2^{exponent} \cdot (1+fraction)",
-            substrings_to_isolate=[r"(-1)", r"^{sign}" ,r"useed", r"^k" , r"2", r"^{exponent}", r"(1+",  r"fraction" , r")"]
+        formula = MathTex(
+            r"(-1)^{s} \cdot useed^k \cdot 2^{e} \cdot (1+f)",
+            substrings_to_isolate=[r"(-1)", r"^{s}" ,r"useed", r"^k" , r"2", r"^{e}", r"(1+",  r"f" , r")"]
         )
 
-        number.set_color_by_tex("^{sign}", RED)
-        number.set_color_by_tex("^k", YELLOW)  # same color as useed for exponent
-        number.set_color_by_tex("^{exponent}", BLUE)
-        number.set_color_by_tex("fraction",GREEN)
+        formula.set_color_by_tex("^{s}", RED)
+        formula.set_color_by_tex("^k", YELLOW)  # same color as useed for exponent
+        formula.set_color_by_tex("^{e}", BLUE)
+        formula.set_color_by_tex("f",GREEN)
 
-        self.play(Write(number))
+        self.play(Write(formula))
         self.wait()
 
-        print("(-1):", number.get_parts_by_tex("(-1)"))
-        print("(1+):", number.get_parts_by_tex("(1+"))
-        print("fraction:", number.get_parts_by_tex("fraction"))
-        print("):", number.get_parts_by_tex(")"))
+        print("(-1):", formula.get_parts_by_tex("(-1)"))
+        print("(1+):", formula.get_parts_by_tex("(1+"))
+        print("fraction:", formula.get_parts_by_tex("f"))
+        print("):", formula.get_parts_by_tex(")"))
 
 
         parts =  []
-        parts.append(VGroup(*number.get_parts_by_tex("useed"), *number.get_parts_by_tex("^k")))
-        parts.append(VGroup(*number.get_parts_by_tex("2"), *number.get_parts_by_tex("^{exponent}")))
+        parts.append(VGroup(*formula.get_parts_by_tex("useed"), *formula.get_parts_by_tex("^k")))
+        parts.append(VGroup(*formula.get_parts_by_tex("2"), *formula.get_parts_by_tex("^{e}")))
         parts.append(VGroup(
-            *number.get_parts_by_tex("(1+"),
-            *number.get_parts_by_tex("fraction"),
-            *number.get_parts_by_tex(")")[1],
+            *formula.get_parts_by_tex("(1+"),
+            *formula.get_parts_by_tex("f"),
+            *formula.get_parts_by_tex(")")[1],
         ))
-        parts.append(VGroup(*number.get_parts_by_tex("(-1)"), *number.get_parts_by_tex("^{sign}")))
+        parts.append(VGroup(*formula.get_parts_by_tex("(-1)"), *formula.get_parts_by_tex("^{s}")))
 
         for part in parts:
             part_center = part.get_center()
 
-            others = VGroup(*[p for p in number if p != part])
+            others = VGroup(*[p for p in formula if p != part])
             self.play(
                 others.animate.set_opacity(0),
                 part.animate.set_opacity(1),
@@ -76,11 +76,17 @@ class Formula(Scene):
             #Here start of anim in between
             if(parts.index(part)==0):
                 self.regime(part)
+            elif(parts.index(part)==1):
+                self.exponent(part)
+            elif(parts.index(part)==2):
+                self.fraction(part)
+            elif(parts.index(part)==3):
+                self.sign(part)
             #Here end of anim in between
 
             # Zoom out: back to original scale and position
             self.play(
-                part.animate.scale(0.5).move_to(number.get_center() + part_center - number.get_center()),
+                part.animate.scale(0.5).move_to(formula.get_center() + part_center - formula.get_center()),
                 run_time=1
             )
 
@@ -91,9 +97,12 @@ class Formula(Scene):
             )
             self.wait(0.3)
 
+        self.play(FadeOut(formula), run_time=0.8)
+        self.wait()
+
     def regime(self,useed_k):
         # Titel "Regime"
-        title = Text("Regime", font_size=72, color=YELLOW).to_edge(UP)
+        title = Text("regime", font_size=72, color=YELLOW).to_edge(UP)
         self.play(Write(title))
         self.wait()
 
@@ -139,6 +148,19 @@ class Formula(Scene):
         self.play(FadeOut(useed_k), run_time=0.8)
         self.wait()
 
+        self.k_vlauetable()
+
+        self.smartlabeledarc()
+
+        self.play(FadeOut(es_group), run_time=0.8)
+        self.wait()
+
+        self.play(FadeIn(useed_k), run_time=0.8)
+        self.wait()
+
+        return es_group
+
+    def k_vlauetable(self):
         #Start von Tabelle
         binary_strings = [
             "0000", "0001", "001x", "01xx", "10xx", "110x", "1110", "1111"
@@ -172,8 +194,8 @@ class Formula(Scene):
         table_body = VGroup(*columns).arrange(RIGHT, buff=0.6)
 
         # Überschriften
-        header_bin = Text("Binary", font_size=32)
-        header_k = Text("Value of k", font_size=32)
+        header_bin = Text("binary", font_size=32)
+        header_k = Text("value of k", font_size=32)
         headers = VGroup(header_bin, header_k).arrange(DOWN, buff=0.6)
         headers.next_to(table_body, LEFT, buff=0.8)
         # Komplettgruppe
@@ -182,21 +204,12 @@ class Formula(Scene):
 
         self.play(Write(header_bin), Write(header_k))
         self.play(LaggedStart(*[FadeIn(col) for col in columns], lag_ratio=0.1))
-        self.wait()
+        self.wait(3)
 
         self.play(FadeOut(table))
         self.wait()
         # Ende von Tabelle
 
-        self.smartlabeledarc()
-
-        self.play(FadeOut(es_group), run_time=0.8)
-        self.wait()
-
-        self.play(FadeIn(useed_k), run_time=0.8)
-        self.wait()
-
-        return es_group
 
     def smartlabeledarc(self):
         radius = 2.5
@@ -245,3 +258,29 @@ class Formula(Scene):
         self.play(FadeOut(visual_elements), run_time=1)
         self.wait()
 
+    def exponent(self,two_e):
+        # Titel "Exponent"
+        title = Text("exponent", font_size=72, color=BLUE).to_edge(UP)
+        self.play(Write(title))
+        self.wait(1)
+
+        self.play(FadeOut(title), run_time=0.8)
+        self.wait()
+
+    def fraction(self,one_p_f):
+        # Titel "Fraction"
+        title = Text("fraction", font_size=72, color=GREEN).to_edge(UP)
+        self.play(Write(title))
+        self.wait(1)
+
+        self.play(FadeOut(title), run_time=0.8)
+        self.wait()
+
+    def sign(self,mone_s):
+        # Titel "Sign-Bit"
+        title = Text("sign bit", font_size=72, color=RED).to_edge(UP)
+        self.play(Write(title))
+        self.wait(1)
+
+        self.play(FadeOut(title), run_time=0.8)
+        self.wait()
