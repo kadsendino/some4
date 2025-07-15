@@ -195,9 +195,9 @@ class Formula(Scene):
     def k_vlauetable(self):
         #Start von Tabelle
         binary_strings = [
-            "0000", "0001", "001x", "01xx", "10xx", "110x", "1110", "1111"
+            "0001", "001x", "01xx", "10xx", "110x", "1110"
         ]
-        k_values = ["-4", "-3", "-2", "-1", "0", "1", "2", "3"]
+        k_values = ["-3", "-2", "-1", "0", "1", "2"]
 
         # Eine Liste von VGroups für jede Spalte
         columns = []
