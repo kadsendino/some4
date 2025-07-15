@@ -1,8 +1,10 @@
+from typing import Text
+from typing_extensions import runtime
 from manim import *
 
 def create_label_list():
     binary_strings = [
-        "0000", "0001", "001x", "01xx", "10xx", "110x", "1110", "1111"
+        "0001", "001x", "01xx", "10xx", "110x", "1110"   
     ]
 
     list = []
@@ -10,10 +12,10 @@ def create_label_list():
         bin_group = VGroup()
         for i, char in enumerate(binary):
             if char == "x":
-                t = MathTex(r"\times", font_size=16).set_color(GRAY)
+                t = MathTex(r"\times", font_size=24).set_color(GRAY)
                 bin_group.add(t)
             else:
-                t = MathTex(char, font_size=16)
+                t = MathTex(char, font_size=24)
                 if binary.startswith("0") and char == "1":
                     t.set_color(DARK_BROWN)  # DARK_BROWN = terminierendes 1 (negativ)
                 elif binary.startswith("1") and char == "0" and i >= 1:
@@ -25,10 +27,40 @@ def create_label_list():
         list.append(bin_group)
     return list
 
+def create_label_list_exponent():
+    # binary_strings = [
+    #     "0001", "001x", "01xx", "10xx", "110x", "1110"   
+    #
+    binary_strings = [format(i, "04b") for i in range(1,16)]
+
+
+    list = []
+    for binary in binary_strings:
+        bin_group = VGroup()
+        after_terminate = False
+        for i, char in enumerate(binary):
+            if after_terminate:
+                t = MathTex(char, font_size=24).set_color(BLUE)
+                bin_group.add(t)
+            else:
+                t = MathTex(char, font_size=24)
+                if binary.startswith("0") and char == "1":
+                    t.set_color(DARK_BROWN)  # DARK_BROWN = terminierendes 1 (negativ)
+                    after_terminate = True
+                elif binary.startswith("1") and char == "0" and i >= 1:
+                    t.set_color(DARK_BROWN)  # terminierendes 0 (positiv)
+                    after_terminate = True
+                else:
+                    t.set_color(YELLOW)
+                bin_group.add(t)
+        bin_group.arrange(RIGHT, buff=0.02)
+        list.append(bin_group)
+    return list
+
 class Formula(Scene):
     def construct(self):
         formula = MathTex(
-            r"(-1)^{s} \cdot useed^k \cdot 2^{e} \cdot (1+f)",
+            r"(-1)^{s} \cdot useed^k \cdot 2^{e} \cdot (1+f)", font_size=64,
             substrings_to_isolate=[r"(-1)", r"^{s}" ,r"useed", r"^k" , r"2", r"^{e}", r"(1+",  r"f" , r")"]
         )
 
@@ -63,12 +95,12 @@ class Formula(Scene):
             self.play(
                 others.animate.set_opacity(0),
                 part.animate.set_opacity(1),
-                run_time=0.5
+                run_time=0.8
             )
 
             # Zoom in: scale up & move part to center
             self.play(
-                part.animate.scale(2).move_to(ORIGIN),
+                part.animate.scale(1.6).move_to(ORIGIN),
                 run_time=1
             )
             self.wait(0.7)
@@ -86,14 +118,14 @@ class Formula(Scene):
 
             # Zoom out: back to original scale and position
             self.play(
-                part.animate.scale(0.5).move_to(formula.get_center() + part_center - formula.get_center()),
+                part.animate.scale(0.625).move_to(formula.get_center() + part_center - formula.get_center()),
                 run_time=1
             )
 
             # Restore opacity of all parts
             self.play(
                 others.animate.set_opacity(1),
-                run_time=0.5
+                run_time=0.8
             )
             self.wait(0.3)
 
@@ -135,9 +167,9 @@ class Formula(Scene):
         self.wait()
 
         # === Oben rechts platzieren, sauber skaliert ===
-        es_group = VGroup(es_tex, useed_full)
+        self.es_group = VGroup(es_tex, useed_full)
         self.play(
-            es_group.animate.scale(0.7).to_corner(UR).shift(DOWN * 0.5),
+            self.es_group.animate.scale(0.7).to_corner(UR).shift(DOWN * 0.5),
             run_time=1
         )
         self.wait()
@@ -152,13 +184,13 @@ class Formula(Scene):
 
         self.smartlabeledarc()
 
-        self.play(FadeOut(es_group), run_time=0.8)
+        self.play(FadeOut(self.es_group), run_time=0.8)
         self.wait()
 
         self.play(FadeIn(useed_k), run_time=0.8)
         self.wait()
 
-        return es_group
+        return self.es_group
 
     def k_vlauetable(self):
         #Start von Tabelle
@@ -226,7 +258,7 @@ class Formula(Scene):
         label2_list = [
             r"\frac{1}{4096}", r"\frac{1}{256}", 
             r"\frac{1}{16}",
-            r"1", r"16", r"256" ]
+            r"1", r"16", r"256"]
 
         visual_elements = VGroup(arc)
         num_points = len(label2_list)
@@ -243,8 +275,8 @@ class Formula(Scene):
             label = label_list[i]
 
             label.move_to(point + 0.3 * direction_normalized + RIGHT * 0.1)
-            label2 = MathTex(label2_list[i], font_size=15)
-            label2.move_to(point - 0.3 * direction_normalized)
+            label2 = MathTex(label2_list[i], font_size=20)
+            label2.move_to(point - 0.4 * direction_normalized)
 
             visual_elements.add(dot, label, label2)
             self.add(dot, label, label2)
@@ -258,13 +290,96 @@ class Formula(Scene):
         self.play(FadeOut(visual_elements), run_time=1)
         self.wait()
 
-    def exponent(self,two_e):
-        # Titel "Exponent"
+
+    def exponent(self, two_e):
+        # Title "Exponent"
         title = Text("exponent", font_size=72, color=BLUE).to_edge(UP)
         self.play(Write(title))
         self.wait(1)
 
-        self.play(FadeOut(title), run_time=0.8)
+        # Fade out the title
+        self.play(FadeOut(title),FadeOut(two_e), run_time=0.8)
+        self.wait()
+
+        self.play(FadeIn(self.es_group), run_time=0.8)
+        self.wait()
+
+        # Add brace under just the exponent (index 1 is the exponent part "0\\cdots0")
+        bits = MathTex("e = 1011\cdots001" , font_size=50, substrings_to_isolate=[r"e",r"1011\cdots001" ])
+        bits.set_color_by_tex("e", BLUE)
+        bits_part = bits[2]
+        self.play(Create(bits), run_time=1)
+        self.wait()
+        brace = Brace(bits_part, direction=DOWN)
+        brace_text = MathTex("\le es", font_size=50).next_to(brace, DOWN)
+        self.play(GrowFromCenter(brace), FadeIn(brace_text), run_time=1)
+        self.wait(1)        # Remove bitstring and brace
+
+        example_bits = MathTex("e = 10" , font_size=50, substrings_to_isolate=[r"e",r"10" ])
+        example_bits.set_color_by_tex("e", BLUE)
+        example_brace = Brace(example_bits[2], direction=DOWN)
+
+        brace_text_example = MathTex("\le 2", font_size=50).next_to(brace, DOWN)
+
+        self.play(Transform(bits,example_bits), Transform(brace_text,brace_text_example),Transform(brace,example_brace),run_time=1)
+        self.wait(1)
+
+        self.play(FadeOut(brace), FadeOut(brace_text), FadeOut(bits), run_time=0.8)
+        self.wait()
+
+        self.smartlabeledarc_exponent()
+        self.play(FadeOut(self.es_group), run_time=0.8)
+        self.wait()
+
+        self.play(FadeIn(two_e), run_time=0.8)
+        self.wait()
+
+    def smartlabeledarc_exponent(self):
+        radius = 2.5
+        start_angle = 3 * PI / 2
+        arc_angle = PI
+        arc = Arc(radius=radius, angle=arc_angle, start_angle=start_angle,color=DARK_BLUE)
+        arc.shift(LEFT)
+        self.play(Create(arc))
+
+        center = arc.get_center()
+
+        label_list = create_label_list_exponent()
+
+        label2_list = [
+            r"\frac{1}{4096}", r"\frac{1}{256}", r"\frac{1}{64}",
+            r"\frac{1}{16}", r"\frac{1}{8}", r"\frac{1}{4}", r"\frac{1}{2}",
+            r"1", r"2", r"4", r"8", r"16", r"64", r"256"
+        ]
+
+        visual_elements = VGroup(arc)
+        num_points = len(label2_list)
+        for i in range(num_points):
+            alpha = i / (num_points - 1)
+            point = arc.point_from_proportion(alpha)
+
+            dot = Dot(point,radius=0.05)
+            self.add(dot)
+
+            direction = (point - center)
+            direction_normalized = direction / np.linalg.norm(direction)
+
+            label = label_list[i]
+
+            label.move_to(point + 0.3 * direction_normalized + RIGHT * 0.1)
+            label2 = MathTex(label2_list[i], font_size=18)
+            label2.move_to(point - 0.35 * direction_normalized)
+
+            visual_elements.add(dot, label, label2)
+            self.add(dot, label, label2)
+
+            self.add(label)
+            self.add(label2)
+
+        self.wait(3)
+
+        # Alles auf einmal verschwinden lassen
+        self.play(FadeOut(visual_elements), run_time=1)
         self.wait()
 
     def fraction(self,one_p_f):
