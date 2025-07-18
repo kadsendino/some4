@@ -60,8 +60,8 @@ def create_label_list_exponent():
 class Formula(Scene):
     def construct(self):
         formula = MathTex(
-            r"(-1)^{s} \cdot useed^k \cdot 2^{e} \cdot (1+f)", font_size=64,
-            substrings_to_isolate=[r"(-1)", r"^{s}" ,r"useed", r"^k" , r"2", r"^{e}", r"(1+",  r"f" , r")"]
+            r"(-1)^{s} \cdot useed^k \cdot 2^{e} \cdot (1.f)", font_size=64,
+            substrings_to_isolate=[r"(-1)", r"^{s}" ,r"useed", r"^k" , r"2", r"^{e}", r"(1.",  r"f" ,r")"]
         )
 
         formula.set_color_by_tex("^{s}", RED)
@@ -72,19 +72,13 @@ class Formula(Scene):
         self.play(Write(formula))
         self.wait()
 
-        print("(-1):", formula.get_parts_by_tex("(-1)"))
-        print("(1+):", formula.get_parts_by_tex("(1+"))
-        print("fraction:", formula.get_parts_by_tex("f"))
-        print("):", formula.get_parts_by_tex(")"))
-
-
         parts =  []
         parts.append(VGroup(*formula.get_parts_by_tex("useed"), *formula.get_parts_by_tex("^k")))
         parts.append(VGroup(*formula.get_parts_by_tex("2"), *formula.get_parts_by_tex("^{e}")))
         parts.append(VGroup(
-            *formula.get_parts_by_tex("(1+"),
+            *formula.get_parts_by_tex("(1."),
             *formula.get_parts_by_tex("f"),
-            *formula.get_parts_by_tex(")")[1],
+            *formula.get_parts_by_tex(")")[1]
         ))
         parts.append(VGroup(*formula.get_parts_by_tex("(-1)"), *formula.get_parts_by_tex("^{s}")))
 
@@ -305,7 +299,7 @@ class Formula(Scene):
         self.wait()
 
         # Add brace under just the exponent (index 1 is the exponent part "0\\cdots0")
-        bits = MathTex("e = 1011\cdots001" , font_size=50, substrings_to_isolate=[r"e",r"1011\cdots001" ])
+        bits = MathTex("e = 11011\cdots" , font_size=50, substrings_to_isolate=[r"e",r"1011\cdots"])
         bits.set_color_by_tex("e", BLUE)
         bits_part = bits[2]
         self.play(Create(bits), run_time=1)
@@ -384,6 +378,18 @@ class Formula(Scene):
 
     def fraction(self,one_p_f):
         # Titel "Fraction"
+        
+        self.play(FadeOut(one_p_f), run_time=0.8)
+        self.wait()
+
+        bits_point = MathTex("1.11011100001" , font_size=70, substrings_to_isolate=[r"1.",r"11011100", r"001" ])
+
+        bits_point.set_color_by_tex("11011100", GREEN)
+        bits_point.set_color_by_tex("001", GREEN)
+
+        self.play(Create(bits_point), run_time=0.8)
+        self.wait()
+
         title = Text("fraction", font_size=72, color=GREEN).to_edge(UP)
         self.play(Write(title))
         self.wait(1)
@@ -391,11 +397,59 @@ class Formula(Scene):
         self.play(FadeOut(title), run_time=0.8)
         self.wait()
 
+        # Briefly highlight the implicit '1'
+        bits_point_one = bits_point.get_part_by_tex("1.")
+        self.play(Indicate(bits_point_one,color="WHITE"),run_time=1)
+        self.wait()
+
+        self.play(FadeOut(bits_point_one),run_time=0.8)
+        self.wait()
+
+        bits_over = bits_point.get_part_by_tex("001")
+        print(bits_over)
+        self.play(bits_over.animate.set_color(RED_E), run_time=1)
+        self.play(Uncreate(bits_over))
+        self.wait(1)
+
+        bits_leftover = bits_point.get_part_by_tex("11011100")
+        self.play(FadeOut(bits_leftover),run_time=0.8)
+        self.wait()
+
+        self.play(FadeIn(one_p_f), run_time=0.8)
+        self.wait()
+
     def sign(self,mone_s):
         # Titel "Sign-Bit"
         title = Text("sign bit", font_size=72, color=RED).to_edge(UP)
         self.play(Write(title))
         self.wait(1)
+
+        self.play(FadeOut(title), run_time=0.8)
+        self.wait()
+
+
+class SpecialCases(Scene):
+    def construct(self):
+        title = Text("special cases", font_size=72, color=WHITE).to_edge(UP)
+        self.play(Write(title))
+        self.wait(1)
+
+        # First expression: 000... = 0
+        zero_expr = MathTex(r"000\dots = 0", font_size=64)
+        zero_expr.to_edge(LEFT)
+
+        # Second expression: 100... = ±∞
+        inf_expr = MathTex(r"100\dots = \pm \infty", font_size=64)
+        inf_expr.next_to(zero_expr, DOWN, buff=0.5).to_edge(LEFT)
+
+        group = VGroup(zero_expr, inf_expr).move_to(ORIGIN)
+        inf_expr.shift(0.04*RIGHT)
+
+        # Animate in
+        self.play(Write(zero_expr))
+        self.wait(0.5)
+        self.play(Write(inf_expr))
+        self.wait()
 
         self.play(FadeOut(title), run_time=0.8)
         self.wait()

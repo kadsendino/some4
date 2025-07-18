@@ -86,7 +86,7 @@ def CreatePosit(str : str,es_value : int):
     #TODO correct es_value to fit posit standart
     #Creates Numbers and Sqaures for Number
     for i, bit in enumerate(str):
-        sq = Square()
+        sq = Square(stroke_width=2)
         if i == 0:
             sq.set_fill(RED, opacity=0.3)
         elif 1 <= i < 1+es_value :
@@ -96,7 +96,7 @@ def CreatePosit(str : str,es_value : int):
         elif 1+es_value+2 <= i:
             sq.set_fill(BLUE, opacity=0.3)
         sq.shift(RIGHT * 2*i)
-        txt = Text(bit).scale(0.5)
+        txt = Text(bit).scale(1.5)
         txt.move_to(sq.get_center())
         group += sq 
         group += txt
