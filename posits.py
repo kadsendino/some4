@@ -57,6 +57,117 @@ def create_label_list_exponent():
         list.append(bin_group)
     return list
 
+
+def get_positinf(bits: str, es_value: int):
+    starting_index = 0
+    # Regime: starts at bit 1, runs until the first bit flip
+    regime_sign = bits[1]
+    i = 1
+    while i < len(bits) and bits[i] == regime_sign:
+        i += 1
+    regime_index = i  # index after regime
+    exponent_index = regime_index + es_value
+    if exponent_index > len(bits):
+        exponent_index = len(bits)
+    fraction_index = len(bits)
+    return (starting_index, regime_index, exponent_index, fraction_index)
+
+
+
+
+def create_posit(str : str,es_value : int):
+    group = VGroup()
+    arrayblock = []
+    # get infos of Posit
+    infos = get_positinf(str,es_value)
+    color = (RED,YELLOW,DARK_BROWN,BLUE)
+    # Creates Numbers and Sqaures for Number
+    for i, bit in enumerate(str):
+        sq = Square(stroke_width=2)
+        for j in range(4):
+            if i <= infos[j]:
+                sq.set_fill(color[j], opacity=0.3)
+                break
+        sq.shift(RIGHT * 2*i)
+        txt = Text(bit).scale(1.5)
+        txt.move_to(sq.get_center())
+        group += sq 
+        group += txt
+        arrayblock.append((sq,txt))  
+
+    #Creates Text for 
+    sign = Text("sign",color=color[0])
+    regime = Text("regime",color=color[1])
+    exponent = Text("exponent",color=color[2])
+    frac = Text("fraction",color=color[3])
+    group.to_edge(LEFT)
+    #arranges sign to right place
+    sign.shift(2*UP)
+    sign.to_edge(LEFT)
+    #arranges regime to right place
+    regime.shift(2*UP)
+    regime.to_edge(LEFT)
+    regime.shift(RIGHT*infos[1])
+    #arranges exponent to right place
+    exponent.shift(2*UP)
+    exponent.to_edge(LEFT)
+    exponent.shift(RIGHT*infos[2])
+    #arranges frac to right place
+    frac.shift(2*UP)
+    frac.to_edge(LEFT)
+    frac.shift(RIGHT*(infos[3]-2))
+    #adds text to VGroup
+    group += sign
+    group += regime
+    group += exponent
+    group += frac
+    #scales to screen size
+    group.width = 13
+    group.scale_to_fit_width
+    group.to_edge(LEFT)
+    return arrayblock,group
+
+
+
+class BitBlocks(Scene):
+    def construct(self):
+        binary_str =  "0100101100010100"
+        posit_block_array,posit_block_group = create_posit(binary_str,4)
+        intro = Text("Floats vs. Posits")
+        intro.scale(2)
+        intro.to_edge(UP)
+        self.play(Create(posit_block_group),Create(intro))
+        self.wait(2)
+
+
+        """
+        #Scene 2 with Arrow moving allong
+        self.play(Uncreate(intro))
+        first_text = Text("Lets look into posits first!")
+        first_text.scale(1.5)
+        first_text.to_edge(UP)
+        self.play(
+            Create(first_text)
+        )
+        arrow = Arrow(start=DOWN*2, end=ORIGIN, color=RED)
+        arrow.to_edge(LEFT)
+        arrow.shift(RIGHT*0.2)
+        self.add(arrow)
+        self.wait(6)
+        # step by step, hard 
+        for i in range (15):
+            arrow.shift(RIGHT*0.815)
+            arrow.update
+            self.wait(0.5)
+        # allong a line, smooth
+        l1 = Line(start=arrow.get_center(),end=arrow.get_center()+RIGHT*12.5)
+        self.play(MoveAlongPath(arrow, l1), rate_func=linear,run_time=5)
+        self.wait
+        """
+
+
+
+
 class Formula(Scene):
     def construct(self):
         formula = MathTex(
