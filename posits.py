@@ -73,8 +73,6 @@ def get_positinf(bits: str, es_value: int):
     return (starting_index, regime_index, exponent_index, fraction_index)
 
 
-
-
 def create_posit(str : str,es_value : int):
     group = VGroup()
     arrayblock = []
