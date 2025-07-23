@@ -20,6 +20,22 @@ Run manim example scene `CreateCircle` from `main.py`:
 uv run manim -pql main.py CreateCircle
 ```
 
+## Voiceover
+
+For using voiceover run:
+
+```
+uv add gtts
+uv run gtts voiceover_test.py
+```
+
+For add it to animation:
+
+```
+uv add pydub
+uv run manim -pql voiceover_specialcases.py SpecialCases
+```
+
 ## Contribution
 
 To create scenes please use the `main` branch but different files than `main.py`. In the end the finished scenes will be combined in `main.py`.
