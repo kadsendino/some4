@@ -73,63 +73,67 @@ def get_positinf(bits: str, es_value: int):
     return (starting_index, regime_index, exponent_index, fraction_index)
 
 
-def create_posit(str : str,es_value : int):
+def create_posit(str: str, es_value: int):
     group = VGroup()
     arrayblock = []
-    # get infos of Posit
-    infos = get_positinf(str,es_value)
-    color = (RED,YELLOW,DARK_BROWN,BLUE)
-    # Creates Numbers and Sqaures for Number
+    # Get infos of Posit
+    infos = get_positinf(str, es_value)
+    color = (RED, YELLOW, DARK_BROWN, BLUE, GREEN)
+
+    # Create Numbers and Squares for Bits
     for i, bit in enumerate(str):
         sq = Square(stroke_width=2)
-        for j in range(4):
-            if i <= infos[j]:
-                sq.set_fill(color[j], opacity=0.3)
-                break
-        sq.shift(RIGHT * 2*i)
         txt = Text(bit).scale(1.5)
-        txt.move_to(sq.get_center())
-        group += sq 
-        group += txt
-        arrayblock.append((sq,txt))  
+        # Determine which color to use
+        if i == infos[1]:  # Last regime bit (terminating bit)
+            txt.set_fill(color[2])  # DARK_BROWN
+        elif i == infos[0]:  # Sign bit
+            txt.set_fill(color[0])  # RED
+        elif infos[0] < i < infos[1]:  # Remaining regime bits
+            txt.set_fill(color[1])  # YELLOW
+        elif infos[1] < i <= infos[2]:  # Exponent bits
+            txt.set_fill(color[3])  # BLUE
+        elif infos[2] < i <= infos[3]:  # Fraction bits
+            txt.set_fill(color[4])  # GREEN
 
-    #Creates Text for 
-    sign = Text("sign",color=color[0])
-    regime = Text("regime",color=color[1])
-    exponent = Text("exponent",color=color[2])
-    frac = Text("fraction",color=color[3])
-    group.to_edge(LEFT)
-    #arranges sign to right place
-    sign.shift(2*UP)
-    sign.to_edge(LEFT)
-    #arranges regime to right place
-    regime.shift(2*UP)
-    regime.to_edge(LEFT)
-    regime.shift(RIGHT*infos[1])
-    #arranges exponent to right place
-    exponent.shift(2*UP)
-    exponent.to_edge(LEFT)
-    exponent.shift(RIGHT*infos[2])
-    #arranges frac to right place
-    frac.shift(2*UP)
-    frac.to_edge(LEFT)
-    frac.shift(RIGHT*(infos[3]-2))
-    #adds text to VGroup
+        sq.shift(RIGHT * 2 * i)
+        txt.move_to(sq.get_center())
+        group += sq
+        group += txt
+        arrayblock.append((sq, txt))
+
+
+    # Create field labels
+    sign = Text("sign", color=color[0])
+    regime = Text("regime", color=color[1])
+    exponent = Text("exponent", color=color[3])
+    frac = Text("fraction", color=color[4])
+
+    # Map them to same height
+    sign.next_to(arrayblock[infos[0]][0], UP)
+    regime.next_to(arrayblock[infos[0] + 1][0], UP)
+    regime.set_y(sign.get_y())
+    exponent.next_to(arrayblock[infos[1] + 1][0], UP)
+    exponent.set_y(sign.get_y())
+    frac.next_to(arrayblock[infos[2] + 1][0], UP)
+    frac.set_y(sign.get_y())
+
     group += sign
     group += regime
     group += exponent
     group += frac
-    #scales to screen size
+
+    # Scale and align
     group.width = 13
     group.scale_to_fit_width
     group.to_edge(LEFT)
-    return arrayblock,group
 
+    return arrayblock, group
 
 
 class BitBlocks(Scene):
     def construct(self):
-        binary_str =  "0100101100010100"
+        binary_str =  "0111101110010000"
         posit_block_array,posit_block_group = create_posit(binary_str,4)
         intro = Text("Floats vs. Posits")
         intro.scale(2)
@@ -528,12 +532,34 @@ class Formula(Scene):
         self.wait()
 
     def sign(self,mone_s):
-        # Titel "Sign-Bit"
+        # Title
         title = Text("sign bit", font_size=72, color=RED).to_edge(UP)
         self.play(Write(title))
         self.wait(1)
 
-        self.play(FadeOut(title), run_time=0.8)
+        self.play(FadeOut(mone_s), run_time=0.8)
+        self.wait()
+
+        pos_rule = MathTex(r"0 \rightarrow +", substrings_to_isolate=["0"], font_size=64)
+        pos_rule.set_color_by_tex("0", RED)
+
+        neg_rule = MathTex(r"1 \rightarrow -", substrings_to_isolate=["1"], font_size=64)
+        neg_rule.set_color_by_tex("1", RED)
+
+        rules = VGroup(pos_rule, neg_rule).arrange(DOWN, buff=0.5)
+        rules.move_to(ORIGIN)
+
+        # Animate in
+        self.play(Write(pos_rule))
+        self.wait(0.3)
+        self.play(Write(neg_rule))
+        self.wait(1)
+
+        # Fade out everything
+        self.play(FadeOut(title), FadeOut(rules), run_time=0.8)
+        self.wait()
+
+        self.play(FadeIn(mone_s), run_time=0.8)
         self.wait()
 
 
