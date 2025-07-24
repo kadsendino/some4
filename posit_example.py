@@ -1,7 +1,6 @@
 from manim import *
 from posits import create_posit,get_positinf
 
-
 def create_arrow(start_point,end_point,color_arc=WHITE):
         # Create a curved arc between points
         arc = ArcBetweenPoints(start_point, end_point, angle=-PI/2, stroke_width=4, color=color_arc)
@@ -75,18 +74,83 @@ class Example(Scene):
         fraction_bits = fraction_bits.copy().set_opacity(1)
         field_labels = field_labels.copy().set_opacity(1)
 
-        number,posit_block_group = self.create_regime_bits(regime_bits,field_labels,posit_block_group)
-        number,posit_block_group = self.create_exponent_bits(exponent_bits,field_labels,number,posit_block_group)
-        posit_block_group = self.create_fraction_bits(fraction_bits,field_labels,number,posit_block_group)
+        number = self.create_regime_bits(regime_bits,field_labels)
+        number = self.create_exponent_bits(exponent_bits,field_labels,number)
+        self.create_fraction_bits(fraction_bits,field_labels,number)
+        self.create_sign_bits(sign_bits,field_labels)
+
+        posit_block_group.add(regime_bits)
+        posit_block_group.add(exponent_bits)
+        posit_block_group.add(fraction_bits)
+        posit_block_group.add(sign_bits)
+
+        for field_label in field_labels:
+            posit_block_group.add(field_label)
 
         self.play(posit_block_group.animate.scale(1.6).move_to(ORIGIN))
         self.wait(2)
+
+        posit_block_array2,posit_block_group2 = create_posit(binary_str,2)
+        posit_block_group2.move_to(ORIGIN)
+        self.play(FadeIn(posit_block_group2))
+        posit_block_group.set_opacity(0)
+
+        self.twos_complement(posit_block_array2,posit_block_group2)
 
         self.play(FadeOut(posit_block_group),FadeOut(self.es_group))
         posit_block_group.set_opacity(0)
         self.wait(1)
 
-    def create_fraction_bits(self, fraction_bits, field_labels, number,posit_block_group):
+    def twos_complement(self,posit_block_array, posit_block_group):
+        # First flip
+        for i, (square, bit_text) in enumerate(posit_block_array):
+            current_char = bit_text.text
+            flipped_char = "1" if current_char == "0" else "0"
+
+            new_bit = Text(flipped_char).scale(0.625)
+            new_bit.move_to(bit_text.get_center())
+            new_bit.set_fill(bit_text.get_color())
+
+            self.play(ReplacementTransform(bit_text, new_bit), run_time=0.2)
+            posit_block_array[i] = (square, new_bit)
+
+        self.wait(4)
+
+        # Second flip with "+1"
+        for i in reversed(range(len(posit_block_array))):
+            square, bit_text = posit_block_array[i]
+
+            plus_one = Text("+1", font_size=24).next_to(square, DOWN)
+            self.play(FadeIn(plus_one), run_time=0.3)
+            self.play(plus_one.animate.move_to(bit_text), run_time=0.3)
+
+            current_char = bit_text.text
+            flipped_char = "1" if current_char == "0" else "0"
+
+            new_bit = Text(flipped_char).scale(0.625)
+            new_bit.move_to(bit_text.get_center())
+            new_bit.set_fill(bit_text.get_color())
+
+            self.play(ReplacementTransform(bit_text, new_bit), FadeOut(plus_one), run_time=0.3)
+            posit_block_array[i] = (square, new_bit)
+
+            if(bit_text.text=="0"):
+                break
+
+        self.wait(2)
+
+
+    def create_sign_bits(self,sign_bits,field_labels):
+        dec = MathTex(r"-255.03125_{10}",substrings_to_isolate=[r"-"]).scale(1.5)
+        dec.set_color_by_tex("-",RED)
+
+        self.play(Write(dec))
+        self.wait(1)
+
+        self.play(ReplacementTransform(dec, sign_bits), FadeIn(field_labels[0]))
+        self.wait(2)
+
+    def create_fraction_bits(self, fraction_bits, field_labels, number):
         number2 = MathTex(r"-1.111111100001_2",substrings_to_isolate=["-1.","111111100001","01","_2"]).scale(1.3)
 
         self.play(number2.animate.set_color_by_tex("111111100001", GREEN),number2.animate.set_color_by_tex("01", GREEN))
@@ -118,11 +182,8 @@ class Example(Scene):
 
         self.play(FadeOut(f_expr),ReplacementTransform(frac_bits, fraction_bits), FadeIn(field_labels[3]))
         self.wait(2)
-        posit_block_group.add(fraction_bits)
-        posit_block_group.add(field_labels[3])
-        return posit_block_group
 
-    def create_exponent_bits(self, exponent_bits, field_labels, number,posit_block_group):
+    def create_exponent_bits(self, exponent_bits, field_labels, number):
         # Step 0: Setup
         shifts = [
             MathTex(r"-111.1111100001_2").scale(1.3),
@@ -180,11 +241,9 @@ class Example(Scene):
         self.play(ReplacementTransform(bits_expr, exponent_bits), FadeOut(e_expr), FadeIn(field_labels[2]))
         self.wait(2)
 
-        posit_block_group.add(exponent_bits)
-        posit_block_group.add(field_labels[2])
-        return current_bin,posit_block_group
+        return current_bin
 
-    def create_regime_bits(self,regime_bits,field_labels,posit_block_group):
+    def create_regime_bits(self,regime_bits,field_labels):
         dec = MathTex(r"-255.03125_{10}").scale(1.5)
         bin_val = MathTex(r"-11111111.00001_2").scale(1.3)
         dot = bin_val[0][9]  # the dot in '11111111.00001'
@@ -230,9 +289,7 @@ class Example(Scene):
         self.play(ReplacementTransform(bits_expr,regime_bits),FadeOut(k_expr_target),FadeIn(field_labels[1]))
         self.wait(2)
 
-        posit_block_group.add(regime_bits)
-        posit_block_group.add(field_labels[1])
-        return bin_val_shifted,posit_block_group
+        return bin_val_shifted
 
     def enable_es_useed(self):
         es_tex = MathTex("es", "=", "2").scale(1.2)
