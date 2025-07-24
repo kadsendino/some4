@@ -83,7 +83,7 @@ def create_posit(str: str, es_value: int):
     # Create Numbers and Squares for Bits
     for i, bit in enumerate(str):
         sq = Square(stroke_width=2)
-        txt = Text(bit).scale(1.5)
+        txt = Text(bit).scale(1.6)
         # Determine which color to use
         if i == infos[1]:  # Last regime bit (terminating bit)
             txt.set_fill(color[2])  # DARK_BROWN
@@ -131,47 +131,9 @@ def create_posit(str: str, es_value: int):
     return arrayblock, group
 
 
-class BitBlocks(Scene):
-    def construct(self):
-        binary_str =  "0111101110010000"
-        posit_block_array,posit_block_group = create_posit(binary_str,4)
-        intro = Text("Floats vs. Posits")
-        intro.scale(2)
-        intro.to_edge(UP)
-        self.play(Create(posit_block_group),Create(intro))
-        self.wait(2)
-
-
-        """
-        #Scene 2 with Arrow moving allong
-        self.play(Uncreate(intro))
-        first_text = Text("Lets look into posits first!")
-        first_text.scale(1.5)
-        first_text.to_edge(UP)
-        self.play(
-            Create(first_text)
-        )
-        arrow = Arrow(start=DOWN*2, end=ORIGIN, color=RED)
-        arrow.to_edge(LEFT)
-        arrow.shift(RIGHT*0.2)
-        self.add(arrow)
-        self.wait(6)
-        # step by step, hard 
-        for i in range (15):
-            arrow.shift(RIGHT*0.815)
-            arrow.update
-            self.wait(0.5)
-        # allong a line, smooth
-        l1 = Line(start=arrow.get_center(),end=arrow.get_center()+RIGHT*12.5)
-        self.play(MoveAlongPath(arrow, l1), rate_func=linear,run_time=5)
-        self.wait
-        """
-
-
-
-
 class Formula(Scene):
     def construct(self):
+
         formula = MathTex(
             r"(-1)^{s} \cdot useed^k \cdot 2^{e} \cdot (1.f)", font_size=64,
             substrings_to_isolate=[r"(-1)", r"^{s}" ,r"useed", r"^k" , r"2", r"^{e}", r"(1.",  r"f" ,r")"]
@@ -182,8 +144,8 @@ class Formula(Scene):
         formula.set_color_by_tex("^{e}", BLUE)
         formula.set_color_by_tex("f",GREEN)
 
-        self.play(Write(formula))
-        self.wait()
+        self.play(Write(formula),run_time=2)
+        self.wait(10)
 
         parts =  []
         parts.append(VGroup(*formula.get_parts_by_tex("useed"), *formula.get_parts_by_tex("^k")))
@@ -234,7 +196,7 @@ class Formula(Scene):
                 others.animate.set_opacity(1),
                 run_time=0.8
             )
-            self.wait(0.3)
+            self.wait(1)
 
         self.play(FadeOut(formula), run_time=0.8)
         self.wait()
@@ -242,8 +204,8 @@ class Formula(Scene):
     def regime(self,useed_k):
         # Titel "Regime"
         title = Text("regime", font_size=72, color=YELLOW).to_edge(UP)
-        self.play(Write(title))
-        self.wait()
+        self.play(Write(title),run_time=1)
+        self.wait(4)
 
         # === useed^k verschwindet ===
         self.play(FadeOut(useed_k),FadeOut(title), run_time=0.8)
@@ -261,10 +223,10 @@ class Formula(Scene):
         useed_eq_index = 1  # Erstes "="
         useed_full.move_to(es_tex).align_to(es_tex[es_eq_index], LEFT).next_to(es_tex, DOWN, buff=0.4).shift(LEFT*0.45)
 
-        self.play(Write(es_tex))
-        self.wait()
-        self.play(Write(useed_full))
-        self.wait()
+        self.play(Write(es_tex),run_time=1)
+        self.wait(13)
+        self.play(Write(useed_full),run_time=1)
+        self.wait(22)
 
         # === Kürzen auf useed = 16, ebenfalls am Gleichheitszeichen zentriert ===
         useed_simple = MathTex("useed", "=", "16").scale(1.2)
@@ -279,10 +241,10 @@ class Formula(Scene):
             self.es_group.animate.scale(0.7).to_corner(UR).shift(DOWN * 0.5),
             run_time=1
         )
-        self.wait()
+        self.wait(5)
 
         self.play(FadeIn(useed_k), run_time=0.8)
-        self.wait(1)
+        self.wait(6)
 
         self.play(FadeOut(useed_k), run_time=0.8)
         self.wait()
@@ -343,9 +305,9 @@ class Formula(Scene):
 
         self.play(Write(header_bin), Write(header_k))
         self.play(LaggedStart(*[FadeIn(col) for col in columns], lag_ratio=0.1))
-        self.wait(3)
+        self.wait(22)
 
-        self.play(FadeOut(table))
+        self.play(FadeOut(table),run_time=1)
         self.wait()
         # Ende von Tabelle
 
@@ -391,7 +353,7 @@ class Formula(Scene):
             self.add(label)
             self.add(label2)
 
-        self.wait(1)
+        self.wait(22)
 
         # Alles auf einmal verschwinden lassen
         self.play(FadeOut(visual_elements), run_time=1)
@@ -402,17 +364,17 @@ class Formula(Scene):
         # Title "Exponent"
         title = Text("exponent", font_size=72, color=BLUE).to_edge(UP)
         self.play(Write(title))
-        self.wait(1)
+        self.wait(10)
 
         # Fade out the title
-        self.play(FadeOut(title),FadeOut(two_e), run_time=0.8)
+        self.play(FadeOut(two_e), FadeOut(title), run_time=0.8)
         self.wait()
 
         self.play(FadeIn(self.es_group), run_time=0.8)
         self.wait()
 
         # Add brace under just the exponent (index 1 is the exponent part "0\\cdots0")
-        bits = MathTex("e = 11011\cdots" , font_size=50, substrings_to_isolate=[r"e",r"1011\cdots"])
+        bits = MathTex("e = 11011\cdots" , font_size=50, substrings_to_isolate=[r"e",r"11011\cdots"])
         bits.set_color_by_tex("e", BLUE)
         bits_part = bits[2]
         self.play(Create(bits), run_time=1)
@@ -420,7 +382,7 @@ class Formula(Scene):
         brace = Brace(bits_part, direction=DOWN)
         brace_text = MathTex("\le es", font_size=50).next_to(brace, DOWN)
         self.play(GrowFromCenter(brace), FadeIn(brace_text), run_time=1)
-        self.wait(1)        # Remove bitstring and brace
+        self.wait(8)        # Remove bitstring and brace
 
         example_bits = MathTex("e = 10" , font_size=50, substrings_to_isolate=[r"e",r"10" ])
         example_bits.set_color_by_tex("e", BLUE)
@@ -429,7 +391,7 @@ class Formula(Scene):
         brace_text_example = MathTex("\le 2", font_size=50).next_to(brace, DOWN)
 
         self.play(Transform(bits,example_bits), Transform(brace_text,brace_text_example),Transform(brace,example_brace),run_time=1)
-        self.wait(1)
+        self.wait(6)
 
         self.play(FadeOut(brace), FadeOut(brace_text), FadeOut(bits), run_time=0.8)
         self.wait()
@@ -483,7 +445,7 @@ class Formula(Scene):
             self.add(label)
             self.add(label2)
 
-        self.wait(3)
+        self.wait(11)
 
         # Alles auf einmal verschwinden lassen
         self.play(FadeOut(visual_elements), run_time=1)
@@ -491,8 +453,11 @@ class Formula(Scene):
 
     def fraction(self,one_p_f):
         # Titel "Fraction"
-        
-        self.play(FadeOut(one_p_f), run_time=0.8)
+        title = Text("fraction", font_size=72, color=GREEN).to_edge(UP)
+        self.play(Write(title))
+        self.wait(10)
+
+        self.play(FadeOut(title),FadeOut(one_p_f), run_time=1)
         self.wait()
 
         bits_point = MathTex("1.11011100001" , font_size=70, substrings_to_isolate=[r"1.",r"11011100", r"001" ])
@@ -501,25 +466,22 @@ class Formula(Scene):
         bits_point.set_color_by_tex("001", GREEN)
 
         self.play(Create(bits_point), run_time=0.8)
-        self.wait()
+        self.wait(6)
 
-        title = Text("fraction", font_size=72, color=GREEN).to_edge(UP)
-        self.play(Write(title))
-        self.wait(1)
 
-        self.play(FadeOut(title), run_time=0.8)
-        self.wait()
+
+        # self.play(FadeOut(title), run_time=0.8)
+        # self.wait()
 
         # Briefly highlight the implicit '1'
         bits_point_one = bits_point.get_part_by_tex("1.")
         self.play(Indicate(bits_point_one,color="WHITE"),run_time=1)
-        self.wait()
+        self.wait(10)
 
         self.play(FadeOut(bits_point_one),run_time=0.8)
-        self.wait()
+        self.wait(6)
 
         bits_over = bits_point.get_part_by_tex("001")
-        print(bits_over)
         self.play(bits_over.animate.set_color(RED_E), run_time=1)
         self.play(Uncreate(bits_over))
         self.wait(1)
@@ -535,9 +497,9 @@ class Formula(Scene):
         # Title
         title = Text("sign bit", font_size=72, color=RED).to_edge(UP)
         self.play(Write(title))
-        self.wait(1)
+        self.wait(6)
 
-        self.play(FadeOut(mone_s), run_time=0.8)
+        self.play(FadeOut(title), FadeOut(mone_s), run_time=0.8)
         self.wait()
 
         pos_rule = MathTex(r"0 \rightarrow +", substrings_to_isolate=["0"], font_size=64)
@@ -550,24 +512,86 @@ class Formula(Scene):
         rules.move_to(ORIGIN)
 
         # Animate in
-        self.play(Write(pos_rule))
-        self.wait(0.3)
-        self.play(Write(neg_rule))
-        self.wait(1)
+        self.play(Write(pos_rule),run_time=1)
+        self.wait(3)
+        self.play(Write(neg_rule),run_time=1)
+        self.wait(7)
 
-        # Fade out everything
-        self.play(FadeOut(title), FadeOut(rules), run_time=0.8)
+        self.play(FadeOut(rules), run_time=0.8)
         self.wait()
+
+        self.twos_complement()
 
         self.play(FadeIn(mone_s), run_time=0.8)
         self.wait()
 
+    def twos_complement(self):
+        
+        complement = Text("two's complement", font_size=72, color=WHITE)
+        self.play(Write(complement))
+        self.wait(10)
+
+        self.play(FadeOut(complement), run_time=0.8)
+        self.wait()
+
+        self.play(FadeIn(self.es_group), run_time=0.8)
+        self.wait()
+
+        binary_str = "0111101010011000"
+        posit_block_array, posit_block_group = create_posit(binary_str, 2)
+        posit_block_group.move_to(ORIGIN)
+
+        self.play(Create(posit_block_group))
+        self.wait(4)
+        self.wait(5)
+
+        # First flip
+        for i, (square, bit_text) in enumerate(posit_block_array):
+            current_char = bit_text.text
+            flipped_char = "1" if current_char == "0" else "0"
+
+            new_bit = Text(flipped_char).scale(0.625)
+            new_bit.move_to(bit_text.get_center())
+            new_bit.set_fill(bit_text.get_color())
+
+            self.play(ReplacementTransform(bit_text, new_bit), run_time=0.2)
+            posit_block_array[i] = (square, new_bit)
+
+        self.wait(4)
+
+        # Second flip with "+1"
+        for i in reversed(range(len(posit_block_array))):
+            square, bit_text = posit_block_array[i]
+
+            plus_one = Text("+1", font_size=24).next_to(square, DOWN)
+            self.play(FadeIn(plus_one), run_time=0.3)
+            self.play(plus_one.animate.move_to(bit_text), run_time=0.3)
+
+            current_char = bit_text.text
+            flipped_char = "1" if current_char == "0" else "0"
+
+            new_bit = Text(flipped_char).scale(0.625)
+            new_bit.move_to(bit_text.get_center())
+            new_bit.set_fill(bit_text.get_color())
+
+            self.play(ReplacementTransform(bit_text, new_bit), FadeOut(plus_one), run_time=0.3)
+            posit_block_array[i] = (square, new_bit)
+
+            if(bit_text.text=="0"):
+                break
+
+        self.wait(2)
+
+        self.play(FadeOut(posit_block_group), run_time=0.8)
+
+        self.play(FadeOut(self.es_group), run_time=0.8)
+        self.wait()
 
 class SpecialCases(Scene):
     def construct(self):
         title = Text("special cases", font_size=72, color=WHITE).to_edge(UP)
         self.play(Write(title))
-        self.wait(1)
+        self.wait(4)
 
         # First expression: 000... = 0
         zero_expr = MathTex(r"000\dots = 0", font_size=64)
@@ -582,9 +606,9 @@ class SpecialCases(Scene):
 
         # Animate in
         self.play(Write(zero_expr))
-        self.wait(0.5)
+        self.wait(4)
         self.play(Write(inf_expr))
-        self.wait()
+        self.wait(7)
 
-        self.play(FadeOut(title), run_time=0.8)
+        self.play(FadeOut(title),FadeOut(group), run_time=0.8)
         self.wait()
