@@ -97,8 +97,7 @@ class Example(Scene):
 
         self.twos_complement(posit_block_array2,posit_block_group2)
 
-        self.play(FadeOut(posit_block_group),FadeOut(self.es_group))
-        posit_block_group.set_opacity(0)
+        self.play(FadeOut(posit_block_group2),FadeOut(self.es_group))
         self.wait(1)
 
     def twos_complement(self,posit_block_array, posit_block_group):
@@ -197,7 +196,7 @@ class Example(Scene):
 
         # Initial exponent label
         e_val = 0
-        e_expr = MathTex("e", "=", str(e_val)).scale(1.3).shift(DOWN)
+        e_expr = MathTex("e", "=", str(e_val)).scale(1.3).shift(UP)
         e_expr.set_color_by_tex("e", BLUE)
         self.play(Write(e_expr))
         self.wait(1)
@@ -215,7 +214,7 @@ class Example(Scene):
             self.wait(0.5)
 
             # Update binary and e expression
-            new_e_expr = MathTex("e", "=", str(e_val)).scale(1.3).shift(DOWN)
+            new_e_expr = MathTex("e", "=", str(e_val)).scale(1.3).shift(UP)
             new_e_expr.set_color_by_tex("e", BLUE)
 
             self.play(
@@ -257,13 +256,13 @@ class Example(Scene):
         self.wait(2)
 
         # Step 1: Start with "k = 0"
-        k_expr = MathTex("k", "=", "0").scale(1.3).shift(DOWN)
+        k_expr = MathTex("k", "=", "0").scale(1.3).shift(UP)
         k_expr.set_color_by_tex("k", YELLOW)
         self.play(Write(k_expr))
         self.wait(1)
 
         # Step 2: Transform "k = 0" -> "k = 1"
-        k_expr_target = MathTex("k", "=", "1").scale(1.3).shift(DOWN)
+        k_expr_target = MathTex("k", "=", "1").scale(1.3).shift(UP)
         k_expr_target.set_color_by_tex("k", YELLOW)
 
         start_point = dot.get_center()
@@ -274,7 +273,12 @@ class Example(Scene):
         self.play(Create(arc))
         self.wait(0.7)
 
-        self.play(ReplacementTransform(bin_val, bin_val_shifted),ReplacementTransform(k_expr, k_expr_target), FadeOut(arc))
+        log = MathTex(r"\log_2 useed = 4").scale(0.5).next_to(arc,DOWN,buff=0.1)
+        self.play(Create(log))
+        self.wait(1)
+
+
+        self.play(ReplacementTransform(bin_val, bin_val_shifted),ReplacementTransform(k_expr, k_expr_target), FadeOut(arc),FadeOut(log))
         self.wait(2)
 
         # Step 3: Add "→ 110" next to it
