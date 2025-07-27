@@ -225,8 +225,8 @@ class Formula(Scene):
 
         self.play(Write(es_tex),run_time=1)
         self.wait(13)
-        self.play(Write(useed_full),run_time=1)
-        self.wait(22)
+        self.play(Write(useed_full),run_time=2)
+        self.wait(21)
 
         # === Kürzen auf useed = 16, ebenfalls am Gleichheitszeichen zentriert ===
         useed_simple = MathTex("useed", "=", "16").scale(1.2)
@@ -358,7 +358,6 @@ class Formula(Scene):
         # Alles auf einmal verschwinden lassen
         self.play(FadeOut(visual_elements), run_time=1)
         self.wait()
-
 
     def exponent(self, two_e):
         # Title "Exponent"
@@ -526,7 +525,7 @@ class Formula(Scene):
         self.wait()
 
     def twos_complement(self):
-        
+
         complement = Text("two's complement", font_size=72, color=WHITE)
         self.play(Write(complement))
         self.wait(10)
@@ -537,7 +536,7 @@ class Formula(Scene):
         self.play(FadeIn(self.es_group), run_time=0.8)
         self.wait()
 
-        binary_str = "0111101010011000"
+        binary_str = "0111101010011100"
         posit_block_array, posit_block_group = create_posit(binary_str, 2)
         posit_block_group.move_to(ORIGIN)
 
