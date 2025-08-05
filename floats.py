@@ -12,16 +12,17 @@ def create_float(str : str, sign_bit = True):
     for i, bit in enumerate(str):
         if (sign_bit == True or i != 0):
             sq = Square(stroke_width=2)
-            for j in range(3):
-                if i <= infos[j]:
-                    sq.set_fill(color[j], opacity=0.3)
-                    break
-            sq.shift(RIGHT * 2*i)
+            sq.shift(RIGHT * 2 * i)
             txt = Text(bit).scale(1.5)
             txt.move_to(sq.get_center())
-            group += sq 
+            for j in range(3):
+                if i <= infos[j]:
+                    txt.set_color(color[j])
+                    break
+
+            group += sq
             group += txt
-            arrayblock.append((sq,txt))  
+            arrayblock.append((sq,txt))
         
     group.to_edge(LEFT)
     #Creates Text for 
@@ -67,48 +68,32 @@ def create_arrow(start_point,end_point,color_arc=WHITE):
 
 
 def create_binary_radix(str: str, index: int):
-    point = Text(".")
-    b1 = Text(str[:index])
-    b2 = Text(str[index:])
-    b2.next_to(b1,buff=0.15)
-    point.next_to(b1,buff=0.05).shift(DOWN*0.2)
-    return [b1,point,b2],VGroup(b1,point,b2).center()
-
-# TODO Decide between list and list2
-def create_bin_index_list(ind : int,bias=0):
-    array = []
     group = VGroup()
-    # adds index infront
-    sq = Rectangle(width=4,stroke_width=2)
-    sq.set_fill(BLUE, opacity=0.3)
-    txt = Text("index")
-    sq.shift(RIGHT * 2)
-    txt.move_to(sq.get_center())
-    group += sq 
-    group += txt
-    array.append((sq,txt))  
-    for i in range(ind):
+    arrayblock = []
+    # get infos of Float16 (IEEE)
+    infos = (0, 5, len(str))
+    # Creates Numbers and Sqaures for Number
+    for i, bit in enumerate(str):
         sq = Square(stroke_width=2)
-        sq.set_fill(BLUE, opacity=0.3)
-        zahl = i - bias
-        if zahl >= 0:
-            exp = 2**zahl
-            txt = MathTex(f"{exp}")
-        else:
-            exp = 2**(abs(zahl))
-            txt = MathTex(r"\frac{1}{" + str(exp) + "}")
-        sq.shift(RIGHT * 2*(i+2.5))
+        sq.shift(RIGHT * 2 * i)
+        txt = Text(bit).scale(1.5)
         txt.move_to(sq.get_center())
-        group += sq 
+        txt.set_color(GREY)
+
+        group += sq
         group += txt
-        array.append((sq,txt))  
+        arrayblock.append((sq, txt))
+
+    group.to_edge(LEFT)
+    # scales to screen size
     group.width = 13
     group.scale_to_fit_width
     group.to_edge(LEFT)
-    group.shift(UP*2)
-    return array, group
 
-def create_bin_index_list2(ind : int,bias=0):
+    return arrayblock, group
+
+
+def create_bin_index_list(ind : int,bias=0):
     array = []
     group = VGroup()
     # adds index infront
@@ -118,8 +103,8 @@ def create_bin_index_list2(ind : int,bias=0):
     array.append(txt)  
     for i in range(ind):
         zahl = i - bias
-        if zahl >= 0:
-            exp = 2**zahl
+        if zahl <= 0:
+            exp = 2** abs(zahl)
             txt = MathTex(f"{exp}")
         else:
             exp = 2**(abs(zahl))
@@ -133,80 +118,31 @@ def create_bin_index_list2(ind : int,bias=0):
     group.shift(UP*2)
     return array, group
 
-def shift_bits(self, bits, num_shifts):
-    #TODO Coppied but has to be changed
-    # Step 0: Setup
-    shifts = [
-        MathTex(r"-111.1111100001_2").scale(1.3),
-        MathTex(r"-11.11111100001_2").scale(1.3),
-        MathTex(r"-1.111111100001_2").scale(1.3),
-    ]
-
-    # Get the initial state from the return value of regime
-    current_bin = number
-    current_dot = current_bin[0][5]  # starting dot index
-
-    # Initial exponent label
-    e_val = 0
-    e_expr = MathTex("e", "=", str(e_val)).scale(1.3).shift(UP)
-    e_expr.set_color_by_tex("e", BLUE)
-    self.play(Write(e_expr))
-    self.wait(1)
-
-    # Iterate through shifts
-    for i, shifted in enumerate(shifts):
-        e_val += 1
-
-        # Get new dot for arrow
-        new_dot = shifted[0][5-e_val]  # assuming dot stays at same relative index
-        arc = create_arrow(current_dot.get_center(), new_dot.get_center(),BLUE)
-
-        # Show arc
-        self.play(Create(arc))
-        self.wait(0.5)
-
-        # Update binary and e expression
-        new_e_expr = MathTex("e", "=", str(e_val)).scale(1.3).shift(UP)
-        new_e_expr.set_color_by_tex("e", BLUE)
-
-        self.play(
-            ReplacementTransform(current_bin, shifted),
-            ReplacementTransform(e_expr, new_e_expr),
-            FadeOut(arc)
-        )
-        self.wait(0.5)
-
-        current_bin = shifted
-        current_dot = new_dot
-        e_expr = new_e_expr
-
-    # Step 4: Add → exponent bits (e.g. → 011)
-    bits_expr = MathTex(r"\rightarrow", "1", "1").scale(1.3).shift(DOWN)
-    bits_expr.set_color_by_tex("1", BLUE)
-    bits_expr.next_to(e_expr, RIGHT, buff=0.6)
-
-    self.play(FadeIn(bits_expr))
-    self.wait(2)
-
-    # Merge into exponent_bits and show label
-    self.play(ReplacementTransform(bits_expr, exponent_bits), FadeOut(e_expr), FadeIn(field_labels[2]))
-    self.wait(2)
-
-    return current_bin
 
 
-
-class Test(Scene):
+class IndexRadix(Scene):
     def construct(self):
-        binary_str = "0100010101001010"
-        a = 10
-        array,group = create_binary_radix(binary_str,5)
-        a1,g1 = create_bin_index_list2(a,3)
-        self.play(Create(g1))
+        binary_str = "010001010100"
+        ind = 5
+        array,group = create_binary_radix(binary_str,ind)
+        a1,g1 = create_bin_index_list(len(binary_str),ind)
+        lower_coord = a1[1].get_bottom()[1]
+        frac_lower_bit = a1[-1].get_bottom()[1]
+        offset = abs(lower_coord - frac_lower_bit)
+        x_offset = abs(a1[1].get_left()[0] - a1[-1].get_right()[0])
+        for i, (e1,e2) in enumerate(zip(a1[1:],array)):
+            box_g = VGroup(e2[0], e2[1])
+            box_g.next_to(e1,DOWN,buff=0)
+            if i <= ind:
+                box_g.shift(DOWN * offset)
+            box_g.shift(DOWN * 0.5)
+            box_g.stretch_to_fit_width(x_offset / (len(binary_str) - 0.9))
+
+        self.add(group, g1)
         self.play(Create(group))
+        self.play(Create(g1))
         self.wait(2)
         
-
 
 
 class BitBlocks(Scene):
@@ -306,9 +242,9 @@ class Float_Concept(Scene):
         self.remove(group)
 
         fe_new = MathTex("float = ")
-        exp_new = MathTex("Exponent", color=color[1])
+        exp_new = MathTex("exponent", color=color[1])
         star_new = MathTex("\cdot")
-        man_new = MathTex("Mantissa", color=color[2])
+        man_new = MathTex("mantissa", color=color[2])
         exp_new.shift(RIGHT * 2)
         star_new.shift(RIGHT * 4)
         man_new.shift(RIGHT * 6)
