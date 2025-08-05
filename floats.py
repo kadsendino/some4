@@ -290,9 +290,9 @@ class Float_Concept(Scene):
         group = VGroup()
         
         fe = MathTex("f = ")
-        exp = MathTex("E", color=color[1])
+        exp = MathTex("2 ^ x", color=color[1])
         star = MathTex("\cdot")
-        man = MathTex("M", color=color[2])
+        man = MathTex("1.y", color=color[2])
 
         exp.shift(RIGHT)
         star.shift(RIGHT * 2)
@@ -320,17 +320,24 @@ class Float_Concept(Scene):
         self.play(ReplacementTransform(group, group_new, run_time=1))
         self.wait(2)
 
-        self.remove(fe_new, star_new)
-        group_new.remove(fe_new, star_new)
-        self.wait(2)
-
         binary_str = "0100010101001010"
         float_block_array, float_text_array, float_block_group = create_float(binary_str, sign_bit = False)
         group_transform = VGroup()
-        group_transform.add(float_text_array[1], float_text_array[0])
-        self.play(ReplacementTransform(group_new, group_transform, run_time=1))
+        group_transform.add(float_text_array[1].copy(), float_text_array[0].copy())
+
+        self.remove(fe_new)
+        group_new.remove(fe_new)
+        #self.play(ReplacementTransform(group_new, group_transform, run_time=1))
+        self.play(ReplacementTransform(exp_new, float_text_array[0].copy(), run_time=1))
+        self.remove(star_new)
+        group_new.remove(star_new)
+        self.play(ReplacementTransform(man_new, float_text_array[1].copy(), run_time=1))
+        float_block_group.remove(float_text_array[1], float_text_array[0])
         self.play(Create(float_block_group))
         self.wait(2)
+
+        self.remove(group_transform)
+        float_block_group.add(float_text_array[1], float_text_array[0])
         exp = 1
 
         # Explain mantissa bits
