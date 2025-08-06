@@ -207,7 +207,7 @@ class Float_Example2(Scene):
         #1 10110 1111111000 without sign bit
         array_block, array_text, group_block = create_float("1101101111111000", Placeholder=True)
         # Split Exponent and Mantissa
-        sign = [array_block[0]]
+        sign = array_block[0]
         exponent = []
         mantissa = []
         for i,(sq, txt) in enumerate(array_block[1:]):
@@ -257,10 +257,11 @@ class Float_Example2(Scene):
         brace_text2 = Text("10 bits", font_size=50).next_to(brace2, DOWN)
         self.play(Transform(brace,brace2,replace_mobject_with_target_in_scene=True),Transform(brace_text,brace_text2,replace_mobject_with_target_in_scene=True))
         self.wait(1)
+        self.play(num_filled.animate.set_color(BLUE),run_time=0.5)
         # Remove bitstring and brace
         self.play(FadeOut(brace2), FadeOut(brace_text2), run_time=1)
         self.wait()
-        # Transform mantissa into mantissa bits 
+        # Transform mantissa into mantissa bits  TODO smoothering animation?
         mantissatext = VGroup(*[txt for sq, txt in mantissa])
         mantissatext.set_opacity(1)
         self.play(ReplacementTransform(num_filled, mantissatext))
@@ -280,6 +281,24 @@ class Float_Example2(Scene):
         exponent_group = VGroup(*[txt for sq, txt in exponent])
         exponent_group.set_opacity(1)
         self.play(ReplacementTransform(bin_char, exponent_group))
+        self.wait(2)
+        # explain sign bit
+        txt_num = MathTex("-255.03125",substrings_to_isolate=["-"])
+        txt_bit = MathTex(r"\rightarrow 1",substrings_to_isolate=["1"])
+        txt_min = txt_num.get_parts_by_tex("-")
+        txt_1 = txt_bit.get_parts_by_tex("1")
+        txt_bit.next_to(txt_num,DOWN,buff=1)
+        txt_group = VGroup(txt_num,txt_bit)
+        self.play(Create(txt_num))
+        self.wait(1)
+        self.play(Create(txt_bit))
+        self.wait(2)
+        txt_min.set_color(RED)
+        txt_1.set_color(RED)
+        self.wait(1)
+        # Replace Sign
+        sign[1].set_opacity(1)
+        self.play(ReplacementTransform(txt_group, VGroup(sign[1])))
         self.wait(2)
         # show result
         array_block_r, array_text_r, group_block_r = create_float("1101101111111000")
