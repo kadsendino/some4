@@ -139,8 +139,7 @@ class IndexRadix(Scene):
             box_g.stretch_to_fit_width(x_offset / (len(binary_str) - 0.9))
 
         self.add(group, g1)
-        self.play(Create(group))
-        self.play(Create(g1))
+        self.play(Create(group), Create(g1))
         self.wait(2)
         
 
