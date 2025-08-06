@@ -114,7 +114,7 @@ class Float_Example1(Scene):
         self.play(Write(implicit))
         self.wait(2)
         self.play(FadeOut(implicit))
-        # filling mantissa with bits
+        # filling mantissa with bits TODO
         num_filled = MathTex("0101100000")
         self.play(Transform(num_new, num_filled))
         self.wait(2)
@@ -124,9 +124,10 @@ class Float_Example1(Scene):
         self.play(ReplacementTransform(num_new, mantissatext))
         self.wait(2)
         # number of shifts + bias
-        characteristic = MathTex("3 + 15 = 18") 
-        characteristic.set_color_by_tex("3", BLUE)
-        characteristic.set_color_by_tex("15", YELLOW)
+        characteristic = MathTex("3 + 15 = 18",substrings_to_isolate=["3","15","18"]) 
+        characteristic.set_color_by_tex("3", BLUE) 
+        characteristic.set_color_by_tex("15", GREEN)
+        characteristic.set_color_by_tex("18",YELLOW)
         self.play(Write(characteristic))
         self.wait(2)
         self.play(Uncreate(count))
@@ -192,18 +193,6 @@ class Float_Example1(Scene):
             count_expr = new_count_expr
         return current_bin, count_expr
 
-        
-class Float_Example2(Scene):
-    def construct(self):
-        # Example 2
-        """
-        -255.03125 -> 11111111.00001
-        11111111.00001  ⇒ 1.111111100001 (7 shifts needed)
-        7 + 15 = 22 = 10110
-        1 10110 1111111000
-        """
-        # Rest + Special Cases
-
 
 class Float_Example2(Scene):
     def construct(self):
@@ -249,25 +238,41 @@ class Float_Example2(Scene):
         self.play(Write(implicit))
         self.wait(2)
         self.play(FadeOut(implicit))
-        # filling mantissa with bits
+        # filling/cutoff mantissa with bits TODO Cutoff
         num_filled = MathTex("111111100001")
         self.play(Transform(num_new, num_filled))
         self.wait(2)
-        # Transform mantissa into mantissa bits
+         #10 bits max
+        brace = Brace(num_filled, direction=DOWN)
+        brace_text = Text("12 bits", font_size=50).next_to(brace, DOWN)
+        self.play(GrowFromCenter(brace), FadeIn(brace_text), run_time=1)
+        self.wait(2)        # Remove bitstring and brace
+        num_filled_fixed = MathTex("1111111000")
+        brace_new = Brace(num_filled_fixed, direction=DOWN)
+        brace_text_new = Text("12 bits", font_size=50).next_to(brace_new, DOWN)
+        self.play(Transform(num_filled,num_filled_fixed))
+        self.wait(0.5)
+        self.play(Transform(brace,brace_new),Transform(brace_text,brace_text_new))
+        self.wait(0.5)
+        self.play(FadeOut(brace), FadeOut(brace_text), run_time=1)
+        self.wait()
+        # Transform mantissa into mantissa bits 
+        """
         mantissatext = VGroup(*[txt for sq, txt in mantissa])
         mantissatext.set_opacity(1)
         self.play(ReplacementTransform(num_new, mantissatext))
         self.wait(2)
         # number of shifts + bias
-        characteristic = MathTex("7 + 15 = 22") 
-        characteristic.set_color_by_tex("7", BLUE)
-        characteristic.set_color_by_tex("15", YELLOW)
+        characteristic = MathTex("7 + 15 = 22",substrings_to_isolate=["7","15","22"]) 
+        characteristic.set_color_by_tex("7", BLUE) 
+        characteristic.set_color_by_tex("15", GREEN)
+        characteristic.set_color_by_tex("22",YELLOW)
         self.play(Write(characteristic))
         self.wait(2)
         self.play(Uncreate(count))
         self.wait(2)
         # Convert to binary
-        bin_char = MathTex("10110")
+        bin_char = MathTex("10110").set_color(YELLOW)
         self.play(Transform(characteristic, bin_char, replace_mobject_with_target_in_scene=True))
         self.wait(2)
         # move exponent to right place
@@ -280,10 +285,9 @@ class Float_Example2(Scene):
         self.play(ReplacementTransform(group_block, group_block_r))
         self.wait(2)
 
-
+    """
     def shifting_num(self,num):
-        shifts = [ 
-            MathTex(r"11111111.00001"),
+        shifts = [
             MathTex(r"1111111.100001"),
             MathTex(r"111111.1100001"),
             MathTex(r"11111.11100001"),
@@ -302,18 +306,20 @@ class Float_Example2(Scene):
         count_expr += Text(" shifts").scale(1).shift(UP*1.4).next_to(count_expr[0], RIGHT)
         count_expr.scale(0.8).center().shift(UP*3)
         self.play(Write(count_expr))
-        self.wait(1)
+        self.wait(0.5)
 
         for i, shifted in enumerate(shifts):
             count += 1
 
+            #set time
+            time = 0.1
             # Get new dot for arrow
             new_dot = shifted[0][8-count]  # assuming dot stays at same relative index
             arc = create_arrow(current_dot.get_center(), new_dot.get_center(),BLUE)
 
             # Show arc
-            self.play(Create(arc))
-            self.wait(0.5)
+            self.play(Create(arc),run_time=time)
+            
 
             # Update binary and count expression
             new_count_expr = VGroup()
@@ -325,9 +331,10 @@ class Float_Example2(Scene):
                 ReplacementTransform(count_expr, new_count_expr),
                 FadeOut(arc)
             )
-            self.wait(0.5)
+            self.wait(time)
 
             current_bin = shifted
             current_dot = new_dot
             count_expr = new_count_expr
         return current_bin, count_expr
+    
