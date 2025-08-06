@@ -48,3 +48,11 @@ class PaperFadeInFromBottom(Scene):
 
         self.wait(0.5)
 
+class ThankYouWriting(Scene):
+    def construct(self):
+        text = Text("Thank you for watching!",font_size=72)
+        self.play(Write(text))
+        self.wait(2)
+        self.play(Unwrite(text))
+        self.wait(2)
+
