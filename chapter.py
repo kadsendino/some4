@@ -96,3 +96,30 @@ class ImageFadeInFromBottom(Scene):
         )
 
         self.wait(0.5)
+
+class AtariBlendInOut(Scene):
+    def construct(self):
+        # Load the image
+        image = ImageMobject("Atari_1040STf_v2.jpg")
+        
+        # Set the initial scale of the image
+        image.scale(0.3)
+        
+        # Position the image in the center
+        image.move_to(ORIGIN)
+        
+        # Start the image fully transparent
+        image.set_opacity(0)
+        
+        # Animate the image blending in (opacity from 0 to 1)
+        self.play(image.animate.set_opacity(1))
+        
+        # Wait for a moment to show the image fully visible
+        self.wait(1)
+        
+        # Animate the image fading out (opacity from 1 to 0)
+        self.play(image.animate.set_opacity(0))
+        
+        # Wait a moment before the scene ends
+        self.wait(1)
+
