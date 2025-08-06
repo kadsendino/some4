@@ -62,3 +62,37 @@ class ImageTest(Scene):
         # self.play(FadeOut(img2),FadeOut(img_rect2),FadeOut(img_text2))
         # self.play(FadeOut(img3),FadeOut(img_rect3),FadeOut(img_text3))
         self.wait(1)
+
+class ImageFadeInFromBottom(Scene):
+    def construct(self):
+        # Load the image
+        image = ImageMobject("beatingfloatspaper.png")
+
+        # Set image size and angle
+        image.scale(0.7)  # You can adjust size here
+        image.rotate(PI / 64)  # Rotate by 22.5 degrees (adjust as needed)
+
+        # Set the starting position (below screen) and zero opacity
+        image.move_to(DOWN * 4)  # Start from below
+        image.set_opacity(0)    # Fully transparent
+
+        # Target position (center or adjusted)
+        target_position = ORIGIN  # Final position slightly above center
+
+        # Animate moving up and fading in
+        self.play(
+            image.animate.move_to(target_position).set_opacity(1),
+            run_time=2,
+            rate_func=smooth
+        )
+
+        self.wait(1)
+
+        # Animate: fade out (and optionally move down again)
+        self.play(
+            image.animate.move_to(DOWN * 4).set_opacity(0),
+            run_time=2,
+            rate_func=smooth
+        )
+
+        self.wait(0.5)
