@@ -238,29 +238,32 @@ class Float_Example2(Scene):
         self.play(Write(implicit))
         self.wait(2)
         self.play(FadeOut(implicit))
-        # filling/cutoff mantissa with bits TODO Cutoff
-        num_filled = MathTex("111111100001")
-        self.play(Transform(num_new, num_filled))
+        # convertion to Binary
+        num_filled = MathTex("111111100001",substrings_to_isolate=["01"])
+        self.play(Transform(num_new, num_filled,replace_mobject_with_target_in_scene=True))
+        self.play(Uncreate(count))
         self.wait(2)
-         #10 bits max
+        # show current bit size
         brace = Brace(num_filled, direction=DOWN)
         brace_text = Text("12 bits", font_size=50).next_to(brace, DOWN)
         self.play(GrowFromCenter(brace), FadeIn(brace_text), run_time=1)
-        self.wait(2)        # Remove bitstring and brace
-        num_filled_fixed = MathTex("1111111000")
-        brace_new = Brace(num_filled_fixed, direction=DOWN)
-        brace_text_new = Text("12 bits", font_size=50).next_to(brace_new, DOWN)
-        self.play(Transform(num_filled,num_filled_fixed))
+        self.wait(2)
+        # Cutoff 2 Bits
+        last_bits = num_filled.get_part_by_tex("01").set_color(RED)
         self.wait(0.5)
-        self.play(Transform(brace,brace_new),Transform(brace_text,brace_text_new))
-        self.wait(0.5)
-        self.play(FadeOut(brace), FadeOut(brace_text), run_time=1)
+        self.play(Uncreate(last_bits),run_time=1)
+        # show updated bit size
+        brace2 = Brace(MathTex("1111111000").shift(LEFT*0.2), direction=DOWN)
+        brace_text2 = Text("10 bits", font_size=50).next_to(brace2, DOWN)
+        self.play(Transform(brace,brace2,replace_mobject_with_target_in_scene=True),Transform(brace_text,brace_text2,replace_mobject_with_target_in_scene=True))
+        self.wait(1)
+        # Remove bitstring and brace
+        self.play(FadeOut(brace2), FadeOut(brace_text2), run_time=1)
         self.wait()
         # Transform mantissa into mantissa bits 
-        """
         mantissatext = VGroup(*[txt for sq, txt in mantissa])
         mantissatext.set_opacity(1)
-        self.play(ReplacementTransform(num_new, mantissatext))
+        self.play(ReplacementTransform(num_filled, mantissatext))
         self.wait(2)
         # number of shifts + bias
         characteristic = MathTex("7 + 15 = 22",substrings_to_isolate=["7","15","22"]) 
@@ -268,8 +271,6 @@ class Float_Example2(Scene):
         characteristic.set_color_by_tex("15", GREEN)
         characteristic.set_color_by_tex("22",YELLOW)
         self.play(Write(characteristic))
-        self.wait(2)
-        self.play(Uncreate(count))
         self.wait(2)
         # Convert to binary
         bin_char = MathTex("10110").set_color(YELLOW)
@@ -284,8 +285,6 @@ class Float_Example2(Scene):
         array_block_r, array_text_r, group_block_r = create_float("1101101111111000")
         self.play(ReplacementTransform(group_block, group_block_r))
         self.wait(2)
-
-    """
     def shifting_num(self,num):
         shifts = [
             MathTex(r"1111111.100001"),
