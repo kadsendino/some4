@@ -36,17 +36,17 @@ class ChapterTitle(Scene):
 
 class ImageTest(Scene):
     def construct(self):
-        img  = ImageMobject("").scale_to_fit_height(config.frame_height).scale(0.28).to_edge(LEFT)
-        img2 = ImageMobject("").scale_to_fit_height(config.frame_height).scale(0.28)
-        img3 = ImageMobject("").scale_to_fit_height(config.frame_height).scale(0.28).to_edge(RIGHT)
+        img  = ImageMobject("floats.png").scale_to_fit_height(config.frame_height).scale(0.28).to_edge(LEFT)
+        img2 = ImageMobject("posits.png").scale_to_fit_height(config.frame_height).scale(0.28)
+        img3 = ImageMobject("posits.png").scale_to_fit_height(config.frame_height).scale(0.28).to_edge(RIGHT)
 
 
         padding = 0.075
-        img_rect = RoundedRectangle(width=img.width+padding,height=img.height+padding,corner_radius=0.2,color=BLACK,stroke_width=12)
+        img_rect = RoundedRectangle(width=img.width+padding,height=img.height+padding,corner_radius=0.2,color=CHAPTER_COLOR,stroke_width=3)
         img_rect.move_to(img)
-        img_rect2 = RoundedRectangle(width=img.width+padding,height=img.height+padding,corner_radius=0.2,color=BLACK,stroke_width=12)
+        img_rect2 = RoundedRectangle(width=img.width+padding,height=img.height+padding,corner_radius=0.2,color=CHAPTER_COLOR,stroke_width=3)
         img_rect2.move_to(img2)
-        img_rect3 = RoundedRectangle(width=img.width+padding,height=img.height+padding,corner_radius=0.2,color=BLACK,stroke_width=12)
+        img_rect3 = RoundedRectangle(width=img.width+padding,height=img.height+padding,corner_radius=0.2,color=CHAPTER_COLOR,stroke_width=3)
         img_rect3.move_to(img3)
 
         img_text = Text("floats",font_size=32,color=CHAPTER_COLOR).next_to(img,UP)
