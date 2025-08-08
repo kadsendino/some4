@@ -1,11 +1,12 @@
+from typing_extensions import runtime
 from manim import *
 
 
 CHAPTER_COLOR = WHITE
 
 chapters = [
-    "1. What where Floats again?",
-    "2. How does Posits work?",
+    "1. What were Floats again?",
+    "2. How do Posits work?",
     "3. Comparison Floats vs. Posits"
 ]
 
@@ -29,7 +30,7 @@ class ChapterTitle(Scene):
             chapter = Text(text, font_size=48, color=CHAPTER_COLOR)
 
             self.play(Write(chapter),run_time=1)
-            self.wait(1)
+            self.wait(2)
 
             self.play(FadeOut(chapter))
             self.wait(1)
@@ -54,10 +55,12 @@ class ImageTest(Scene):
         img_text3 = Text("comparison",font_size=32,color=CHAPTER_COLOR).next_to(img3,UP)
 
 
-        self.play(FadeIn(img),FadeIn(img_rect),FadeIn(img_text))
-        self.play(FadeIn(img2),FadeIn(img_rect2),FadeIn(img_text2))
-        self.play(FadeIn(img3),FadeIn(img_rect3),FadeIn(img_text3))
-        self.wait(1)
+        self.play(FadeIn(img),FadeIn(img_rect),FadeIn(img_text),run_time=1)
+        self.wait(5)
+        self.play(FadeIn(img2),FadeIn(img_rect2),FadeIn(img_text2),run_time=1)
+        self.wait(5)
+        self.play(FadeIn(img3),FadeIn(img_rect3),FadeIn(img_text3),run_time=1)
+        self.wait(5)
         self.play(FadeOut(img),FadeOut(img_rect),FadeOut(img_text),FadeOut(img2),FadeOut(img_rect2),FadeOut(img_text2),FadeOut(img3),FadeOut(img_rect3),FadeOut(img_text3))
         # self.play(FadeOut(img2),FadeOut(img_rect2),FadeOut(img_text2))
         # self.play(FadeOut(img3),FadeOut(img_rect3),FadeOut(img_text3))
@@ -86,7 +89,7 @@ class ImageFadeInFromBottom(Scene):
             rate_func=smooth
         )
 
-        self.wait(1)
+        self.wait(5)
 
         # Animate: fade out (and optionally move down again)
         self.play(
@@ -112,13 +115,13 @@ class AtariBlendInOut(Scene):
         image.set_opacity(0)
         
         # Animate the image blending in (opacity from 0 to 1)
-        self.play(image.animate.set_opacity(1))
+        self.play(image.animate.set_opacity(1),run_time=1)
         
         # Wait for a moment to show the image fully visible
-        self.wait(1)
+        self.wait(5)
         
         # Animate the image fading out (opacity from 1 to 0)
-        self.play(image.animate.set_opacity(0))
+        self.play(image.animate.set_opacity(0),run_time=1)
         
         # Wait a moment before the scene ends
         self.wait(1)
