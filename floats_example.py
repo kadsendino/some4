@@ -387,4 +387,35 @@ class Float_Example2(Scene):
             current_dot = new_dot
             count_expr = new_count_expr
         return current_bin, count_expr
-    
+
+
+class Float_Special_Cases(Scene):
+    def construct(self):
+        text = MathTex("special \; case: ")
+        text_zero = MathTex("\pm0").next_to(text)
+        group_text = VGroup().add(text, text_zero).center().shift(UP)
+        self.play(Create(group_text))
+        array_block_r, array_text_r, group_block_r = create_float("X000000000000000")
+        group_block_r.shift(DOWN)
+        self.play(Create(group_block_r))
+        self.wait(2)
+
+        self.play(Uncreate(text_zero))
+        group_text.remove(text_zero)
+        text_inf = MathTex("\pm\infty").next_to(text)
+        self.play(Create(text_inf))
+        array_block_inf, array_text_inf, group_block_inf = create_float("X111110000000000")
+        group_block_inf.shift(DOWN)
+        self.play(ReplacementTransform(group_block_r, group_block_inf))
+        self.wait(2)
+
+
+        self.play(Uncreate(text_inf))
+        text_unequal = MathTex(r"\neq0").next_to(array_text_inf[2], buff = 0.02).set_color(BLUE).scale(0.8)
+        text_NaN = MathTex("NaN").next_to(text)
+        self.play(Create(text_NaN))
+        array_block_NaN, array_text_NaN, group_block_NaN = create_float("X11111XXXXXXXXXX")
+        group_block_NaN.shift(DOWN)
+        self.add(text_unequal)
+        self.play(ReplacementTransform(group_block_inf, group_block_NaN))
+        self.wait(2)
