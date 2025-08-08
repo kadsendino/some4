@@ -56,12 +56,12 @@ class Example(Scene):
         field_labels.set_opacity(0)
 
         self.play(Create(squares))
-        self.wait(1)
+        self.wait(6)
 
         brace = Brace(squares, direction=DOWN)
         brace_text = Text("16 bits", font_size=50).next_to(brace, DOWN)
         self.play(GrowFromCenter(brace), FadeIn(brace_text), run_time=1)
-        self.wait(2)        # Remove bitstring and brace
+        self.wait(3)        # Remove bitstring and brace
 
         self.play(FadeOut(brace), FadeOut(brace_text), run_time=1)
         self.wait()
@@ -113,7 +113,7 @@ class Example(Scene):
             self.play(ReplacementTransform(bit_text, new_bit), run_time=0.2)
             posit_block_array[i] = (square, new_bit)
 
-        self.wait(4)
+        self.wait(2)
 
         # Second flip with "+1"
         for i in reversed(range(len(posit_block_array))):
@@ -136,7 +136,7 @@ class Example(Scene):
             if(bit_text.text=="0"):
                 break
 
-        self.wait(2)
+        self.wait(6)
 
 
     def create_sign_bits(self,sign_bits,field_labels):
@@ -154,12 +154,12 @@ class Example(Scene):
 
         self.play(number2.animate.set_color_by_tex("111111100001", GREEN),number2.animate.set_color_by_tex("01", GREEN))
         number.set_opacity(0)
-        self.wait(2)
+        self.wait(4)
 
         bits_point_one = number2.get_part_by_tex("-1.")
         base_two = number2.get_part_by_tex("_2")
         self.play(FadeOut(base_two),FadeOut(bits_point_one),run_time=0.8)
-        self.wait(1)
+        self.wait(2)
 
         bits_over = VGroup()
 
@@ -167,7 +167,7 @@ class Example(Scene):
         bits_over.add(number2.get_part_by_tex("01")[-2])
         self.play(bits_over.animate.set_color(RED_E), run_time=1)
         self.play(Uncreate(bits_over))
-        self.wait(1)
+        self.wait(5)
 
         frac_bits = number2.get_part_by_tex("1111111000")
 
@@ -199,7 +199,7 @@ class Example(Scene):
         e_expr = MathTex("e", "=", str(e_val)).scale(1.3).shift(UP)
         e_expr.set_color_by_tex("e", BLUE)
         self.play(Write(e_expr))
-        self.wait(1)
+        self.wait(7)
 
         # Iterate through shifts
         for i, shifted in enumerate(shifts):
@@ -234,7 +234,7 @@ class Example(Scene):
         bits_expr.next_to(e_expr, RIGHT, buff=0.6)
 
         self.play(FadeIn(bits_expr))
-        self.wait(2)
+        self.wait(3)
 
         # Merge into exponent_bits and show label
         self.play(ReplacementTransform(bits_expr, exponent_bits), FadeOut(e_expr), FadeIn(field_labels[2]))
@@ -275,11 +275,11 @@ class Example(Scene):
 
         log = MathTex(r"\log_2 useed = 4").scale(0.5).next_to(arc,DOWN,buff=0.1)
         self.play(Create(log))
-        self.wait(1)
+        self.wait(8)
 
 
         self.play(ReplacementTransform(bin_val, bin_val_shifted),ReplacementTransform(k_expr, k_expr_target), FadeOut(arc),FadeOut(log))
-        self.wait(2)
+        self.wait(3)
 
         # Step 3: Add "→ 110" next to it
         bits_expr = MathTex(r"\rightarrow", "1", "1", "0").scale(1.3).shift(DOWN)
