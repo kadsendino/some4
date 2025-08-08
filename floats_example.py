@@ -158,11 +158,17 @@ class Float_Example1(Scene):
         characteristic.set_color_by_tex("15", GREEN)
         characteristic.set_color_by_tex("18",YELLOW)
         self.play(Write(characteristic))
+        bias = characteristic.get_parts_by_tex("15")
+        arrow = Arrow(start=UP, end=DOWN, color=GREEN).scale(0.5).next_to(bias, UP)
+        text_bias = MathTex("bias").set_color(GREEN).next_to(arrow, UP)
+        group_bias = VGroup().add(arrow, text_bias)
+        self.play(Create(group_bias))
         self.wait(2)
+        self.play(Uncreate(group_bias))
         self.play(Uncreate(count))
         self.wait(2)
         # Convert to binary
-        bin_char = MathTex("10010")
+        bin_char = MathTex("10010").set_color(YELLOW)
         self.play(Transform(characteristic, bin_char, replace_mobject_with_target_in_scene=True))
         self.wait(2)
         # move exponent to right place
@@ -172,7 +178,10 @@ class Float_Example1(Scene):
         self.wait(2)
         # show result
         array_block_r, array_text_r, group_block_r = create_float("0100100101100000")
+        group_block_r.remove(array_block_r[0][0], array_block_r[0][1], array_text_r[0])
         self.play(ReplacementTransform(group_block, group_block_r))
+        self.wait(2)
+        self.play(Create(array_block_r[0][0]), Create(array_block_r[0][1]), Create(array_text_r[0]))
         self.wait(2)
 
 
@@ -208,10 +217,7 @@ class Float_Example1(Scene):
             # Update binary and count expression
             new_count_expr = VGroup()
             new_count_expr += MathTex(str(count)).set_color_by_tex(str(count),BLUE).scale(1.5).shift(UP)
-            if i == 0:
-                new_count_expr += Text(" shift").scale(1).shift(UP*1.4).next_to(new_count_expr[0], RIGHT)
-            else:
-                new_count_expr += Text(" shifts").scale(1).shift(UP * 1.4).next_to(new_count_expr[0], RIGHT)
+            new_count_expr += Text(" shifts").scale(1).shift(UP * 1.4).next_to(new_count_expr[0], RIGHT)
             new_count_expr.scale(0.8).center().shift(UP*3)
             self.play(
                 ReplacementTransform(current_bin, shifted),
@@ -261,19 +267,32 @@ class Float_Example2(Scene):
         # Normalized form
         num_new, count = self.shifting_num(num)
         self.wait(2)
+
         # Explain 1.x
-        implicit = MathTex("1.X")
-        implicit.set_color(RED)
-        implicit.next_to(num_new, DOWN*1.5)
-        num_new.set_color(RED)
-        #num_new[2:].set_color(BLUE)
-        self.play(Write(implicit))
+        self.remove(num_new)
+        shifted_text = num_new.tex_string[2:]
+        one_dot_X = MathTex("1.").set_color(RED)
+        one_dot_shift = MathTex("1.").set_color(RED)
+        implicit = MathTex("X").next_to(one_dot_X, RIGHT, buff=0.05)
+        num_ohne_one = MathTex(shifted_text).next_to(one_dot_shift, RIGHT, buff=0.05)
+        group_one_dot = VGroup().add(one_dot_shift, num_ohne_one).center()
+        self.add(group_one_dot)
+        group_one_X = VGroup().add(one_dot_X, implicit).center().shift(DOWN * 0.7)
+        self.play(Write(group_one_X))
         self.wait(2)
-        self.play(FadeOut(implicit))
+        self.play(FadeOut(group_one_X))
+
+        # remove 1.
+        self.wait(2)
+        self.play(FadeOut(one_dot_shift))
+        self.wait(2)
+
         # convertion to Binary
         num_filled = MathTex("111111100001",substrings_to_isolate=["01"])
-        self.play(Transform(num_new, num_filled,replace_mobject_with_target_in_scene=True))
         self.play(Uncreate(count))
+        self.play(num_ohne_one.animate.shift(LEFT * 0.175)) # trail and error wert
+        self.remove(num_ohne_one)
+        self.add(num_filled)
         self.wait(2)
         # show current bit size
         brace = Brace(num_filled, direction=DOWN)
@@ -304,7 +323,13 @@ class Float_Example2(Scene):
         characteristic.set_color_by_tex("15", GREEN)
         characteristic.set_color_by_tex("22",YELLOW)
         self.play(Write(characteristic))
+        bias = characteristic.get_parts_by_tex("15")
+        arrow = Arrow(start=UP, end=DOWN, color=GREEN).scale(0.5).next_to(bias, UP)
+        text_bias = MathTex("bias").set_color(GREEN).next_to(arrow, UP)
+        group_bias = VGroup().add(arrow, text_bias)
+        self.play(Create(group_bias))
         self.wait(2)
+        self.play(Uncreate(group_bias))
         # Convert to binary
         bin_char = MathTex("10110").set_color(YELLOW)
         self.play(Transform(characteristic, bin_char, replace_mobject_with_target_in_scene=True))
