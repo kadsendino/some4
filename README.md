@@ -48,6 +48,7 @@ For documentation please visit the [Manim Community Website](https://docs.manim.
 ## Images
 
 "beatingfloatspaper.png" [1]
+
 "Atari_1040STf_v2.jpg" [3]
 
 
