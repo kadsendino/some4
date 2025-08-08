@@ -154,13 +154,15 @@ class BitBlocks(Scene):
 
 class FixedPoint(Scene):
     def construct(self):
+        self.wait(2)
         txt1 = Text("We need a binary representation!")
         bin_num = Text("010101010101000001010101010110")
         txt1.shift(UP*2)
         self.play(FadeIn(txt1),run_time=0.8)
+        self.wait(5)
         self.play(FadeIn(bin_num),run_time=0.8)
         
-        self.wait(2)
+        self.wait(10)
         
         #radix point
         point = Text(".")
@@ -171,7 +173,7 @@ class FixedPoint(Scene):
         self.play(FadeIn(g1))
         self.play(FadeOut(arrow,arrow_dis))
 
-        self.wait(2)
+        self.wait(5)
         
         # Morph Radix into binary number
         bin_num1 = Text("010101010101000")
@@ -237,7 +239,7 @@ class Float_Concept(Scene):
         group.center()
 
         self.play(FadeIn(group),run_time=0.8)
-        self.wait(2)
+        self.wait(5)
         self.remove(group)
 
         fe_new = MathTex("float = ")
@@ -253,7 +255,7 @@ class Float_Concept(Scene):
         group_new.center()
 
         self.play(ReplacementTransform(group, group_new, run_time=1))
-        self.wait(2)
+        self.wait(5)
 
         binary_str = "0100010101001010"
         float_block_array, float_text_array, float_block_group = create_float(binary_str, sign_bit = False)

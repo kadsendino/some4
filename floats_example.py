@@ -97,7 +97,7 @@ class Float_Example1(Scene):
         # 10.75 in binary
         num = MathTex("10.75")
         self.play(Write(num))
-        self.wait(2)
+        self.wait(5)
         # Binary representation
         binary = MathTex("1010.11")
         self.play(Transform(num, binary))
@@ -117,7 +117,7 @@ class Float_Example1(Scene):
         self.add(group_one_dot)
         group_one_X = VGroup().add(one_dot_X, implicit).center().shift(DOWN * 0.7)
         self.play(Write(group_one_X))
-        self.wait(2)
+        self.wait(10)
         self.play(FadeOut(group_one_X))
 
         # remove 1.
@@ -163,7 +163,7 @@ class Float_Example1(Scene):
         text_bias = MathTex("bias").set_color(GREEN).next_to(arrow, UP)
         group_bias = VGroup().add(arrow, text_bias)
         self.play(Create(group_bias))
-        self.wait(2)
+        self.wait(10)
         self.play(Uncreate(group_bias))
         self.play(Uncreate(count))
         self.wait(2)
@@ -175,7 +175,7 @@ class Float_Example1(Scene):
         exponent_group = VGroup(*[txt for sq, txt in exponent])
         exponent_group.set_opacity(1)
         self.play(ReplacementTransform(bin_char, exponent_group))
-        self.wait(2)
+        self.wait(5)
         # show result
         array_block_r, array_text_r, group_block_r = create_float("0100100101100000")
         group_block_r.remove(array_block_r[0][0], array_block_r[0][1], array_text_r[0])
@@ -259,7 +259,7 @@ class Float_Example2(Scene):
         # -255.03125 in binary
         num = MathTex("-255.03125")
         self.play(Write(num))
-        self.wait(2)
+        self.wait(5)
         # Binary representation
         binary = MathTex("11111111.00001")
         self.play(Transform(num, binary))
@@ -387,7 +387,7 @@ class Float_Example2(Scene):
             count += 1
 
             #set time
-            time = 0.1
+            time = 0.05
             # Get new dot for arrow
             new_dot = shifted[0][8-count]  # assuming dot stays at same relative index
             arc = create_arrow(current_dot.get_center(), new_dot.get_center(),BLUE)
@@ -423,7 +423,7 @@ class Float_Special_Cases(Scene):
         array_block_r, array_text_r, group_block_r = create_float("X000000000000000")
         group_block_r.shift(DOWN)
         self.play(Create(group_block_r))
-        self.wait(2)
+        self.wait(15)
 
         self.play(Uncreate(text_zero))
         group_text.remove(text_zero)
@@ -432,7 +432,7 @@ class Float_Special_Cases(Scene):
         array_block_inf, array_text_inf, group_block_inf = create_float("X111110000000000")
         group_block_inf.shift(DOWN)
         self.play(ReplacementTransform(group_block_r, group_block_inf))
-        self.wait(2)
+        self.wait(10)
 
 
         self.play(Uncreate(text_inf))
@@ -443,7 +443,7 @@ class Float_Special_Cases(Scene):
         group_block_NaN.shift(DOWN)
         self.add(text_unequal)
         self.play(ReplacementTransform(group_block_inf, group_block_NaN))
-        self.wait(2)
+        self.wait(5)
 
 
 
