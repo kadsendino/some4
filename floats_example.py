@@ -444,3 +444,17 @@ class Float_Special_Cases(Scene):
         self.add(text_unequal)
         self.play(ReplacementTransform(group_block_inf, group_block_NaN))
         self.wait(2)
+
+
+
+class Float_03(Scene):
+    def construct(self):
+        text_start = Text("How would we represent 0.3 in float16?").shift(UP * 2).scale(0.6)
+        self.add(text_start)
+        self.wait(2)
+        array_block_r, array_text_r, group_block_r = create_float("0011010011001101")
+        self.play(Create(group_block_r))
+        text_03 = Text("0.300048828125").shift(UP * 2).scale(0.6)
+        self.play(Uncreate(text_start))
+        self.play(Create(text_03))
+        self.wait(2)
