@@ -48,6 +48,43 @@ class PaperFadeInFromBottom(Scene):
 
         self.wait(0.5)
 
+
+class CreditsScene(Scene):
+    def construct(self):
+        # Top text
+        top_text = Text("Created by").to_edge(UP)
+        self.play(Write(top_text),run_time=1.5)
+
+        # Middle names
+        names = VGroup(
+            Text("Vorname1 Nachname1"),
+            Text("Vorname2 Nachname2"),
+            Text("Vorname3 Nachname3"),
+            Text("Vorname4 Nachname4"),
+        ).arrange(DOWN, buff=0.3).scale(0.5)
+        names.next_to(top_text,DOWN).shift(DOWN)
+        
+
+        self.wait(1)
+        self.play(FadeIn(names, shift=UP),run_time=2)
+
+        self.wait(1)
+
+        # Bottom text
+        bottom_text = Text("Created with").scale(0.7).next_to(ORIGIN, DOWN*2.5)
+
+        # Manim Banner animation
+        banner = ManimBanner().scale(0.4)
+        banner.to_edge(DOWN)
+
+        bottom_text.next_to(banner,UP)
+
+        self.play(Write(bottom_text),run_time=1)
+        self.play(banner.create())
+        self.play(banner.expand())
+        self.wait()
+        self.play(Unwrite(banner), FadeOut(top_text), FadeOut(names), FadeOut(bottom_text))
+
 class ThankYouWriting(Scene):
     def construct(self):
         text = Text("Thank you for watching!",font_size=72)
