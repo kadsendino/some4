@@ -15,7 +15,7 @@ class PaperFadeInFromBottom(Scene):
             run_time=2,
             rate_func=smooth
         )
-        self.wait(1)
+        self.wait(3)
 
         # Step 2: Create multi-line text (initially invisible)
         text = MarkupText("+ other resources\nlinked in the description", font_size=28, line_spacing=0.5)
@@ -33,7 +33,7 @@ class PaperFadeInFromBottom(Scene):
             rate_func=smooth
         )
 
-        self.wait(1.5)
+        self.wait(5)
 
         image_x = image.get_x()
         text_x = text.get_x()
@@ -68,7 +68,7 @@ class CreditsScene(Scene):
         self.wait(1)
         self.play(FadeIn(names, shift=UP),run_time=2)
 
-        self.wait(1)
+        self.wait(3)
 
         # Bottom text
         bottom_text = Text("Created with").scale(0.7).next_to(ORIGIN, DOWN*2.5)
@@ -82,7 +82,7 @@ class CreditsScene(Scene):
         self.play(Write(bottom_text),run_time=1)
         self.play(banner.create())
         self.play(banner.expand())
-        self.wait()
+        self.wait(20)
         self.play(Unwrite(banner), FadeOut(top_text), FadeOut(names), FadeOut(bottom_text))
 
 class ThankYouWriting(Scene):
