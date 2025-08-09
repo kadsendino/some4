@@ -63,4 +63,4 @@ For documentation please visit the [Manim Community Website](https://docs.manim.
 
 ## License
 
-See [MIT License](https://github.com/kadsendino/some4?tab=MIT-1-ov-file).
+The written source code is licensed under [MIT License](https://github.com/kadsendino/some4?tab=MIT-1-ov-file).
