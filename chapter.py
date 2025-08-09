@@ -37,9 +37,9 @@ class ChapterTitle(Scene):
 
 class ImageTest(Scene):
     def construct(self):
-        img  = ImageMobject("floats.png").scale_to_fit_height(config.frame_height).scale(0.28).to_edge(LEFT)
-        img2 = ImageMobject("posits.png").scale_to_fit_height(config.frame_height).scale(0.28)
-        img3 = ImageMobject("posits.png").scale_to_fit_height(config.frame_height).scale(0.28).to_edge(RIGHT)
+        img  = ImageMobject("data/floats.png").scale_to_fit_height(config.frame_height).scale(0.28).to_edge(LEFT)
+        img2 = ImageMobject("data/posits.png").scale_to_fit_height(config.frame_height).scale(0.28)
+        img3 = ImageMobject("data/posits.png").scale_to_fit_height(config.frame_height).scale(0.28).to_edge(RIGHT)
 
 
         padding = 0.075
@@ -69,7 +69,7 @@ class ImageTest(Scene):
 class ImageFadeInFromBottom(Scene):
     def construct(self):
         # Load the image
-        image = ImageMobject("beatingfloatspaper.png")
+        image = ImageMobject("data/beatingfloatspaper.png")
 
         # Set image size and angle
         image.scale(0.7)  # You can adjust size here
@@ -103,7 +103,7 @@ class ImageFadeInFromBottom(Scene):
 class AtariBlendInOut(Scene):
     def construct(self):
         # Load the image
-        image = ImageMobject("Atari_1040STf_v2.jpg")
+        image = ImageMobject("data/Atari_1040STf_v2.jpg")
         
         # Set the initial scale of the image
         image.scale(0.3)

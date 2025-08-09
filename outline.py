@@ -3,7 +3,7 @@ from manim import *
 class PaperFadeInFromBottom(Scene):
     def construct(self):
         # Load the image
-        image = ImageMobject("beatingfloatspaper.png")
+        image = ImageMobject("data/beatingfloatspaper.png")
         image.scale(0.7)
         image.rotate(PI / 64)
         image.move_to(DOWN * 4)
@@ -71,7 +71,7 @@ class CreditsScene(Scene):
         self.wait(3)
 
         # Bottom text
-        bottom_text = Text("Created with").scale(0.7).next_to(ORIGIN, DOWN*2.5)
+        bottom_text = Text("Made with").scale(0.7).next_to(ORIGIN, DOWN*2.5)
 
         # Manim Banner animation
         banner = ManimBanner().scale(0.4)
