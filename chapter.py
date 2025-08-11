@@ -60,7 +60,7 @@ class ImageTest(Scene):
         self.play(FadeIn(img2),FadeIn(img_rect2),FadeIn(img_text2),run_time=1)
         self.wait(5)
         self.play(FadeIn(img3),FadeIn(img_rect3),FadeIn(img_text3),run_time=1)
-        self.wait(5)
+        self.wait(13)
         self.play(FadeOut(img),FadeOut(img_rect),FadeOut(img_text),FadeOut(img2),FadeOut(img_rect2),FadeOut(img_text2),FadeOut(img3),FadeOut(img_rect3),FadeOut(img_text3))
         # self.play(FadeOut(img2),FadeOut(img_rect2),FadeOut(img_text2))
         # self.play(FadeOut(img3),FadeOut(img_rect3),FadeOut(img_text3))
@@ -89,7 +89,7 @@ class ImageFadeInFromBottom(Scene):
             rate_func=smooth
         )
 
-        self.wait(5)
+        self.wait(12)
 
         # Animate: fade out (and optionally move down again)
         self.play(
@@ -118,11 +118,56 @@ class AtariBlendInOut(Scene):
         self.play(image.animate.set_opacity(1),run_time=1)
         
         # Wait for a moment to show the image fully visible
-        self.wait(5)
+        self.wait(8)
         
         # Animate the image fading out (opacity from 1 to 0)
         self.play(image.animate.set_opacity(0),run_time=1)
-        
-        # Wait a moment before the scene ends
-        self.wait(1)
+
+class AtariIEEE(Scene):
+    def construct(self):
+        # Load the image
+        image = ImageMobject("data/Atari_1040STf_v2.jpg")
+        image.scale(0.3)
+        image.move_to(ORIGIN)
+
+        # IEEE-Logo-Style Text
+        ieee_color = "#31709e"  # IEEE-Blau
+        # Alternativ könntest du eine systemseitige Schrift verwenden, z. B. "Helvetica Bold"
+        ieee_text = Text(
+            "IEEE",
+            font="Helvetica Bold",
+            weight=BOLD,
+            color=ieee_color,
+            font_size=64
+        )
+
+        # Move text to the *center* of the image
+        ieee_text.move_to(image.get_center())
+        ieee_text.shift(LEFT * 0.5).shift(UP * 0.5)
+
+        # Rotate text 45 degrees (pi/4 radians)
+        ieee_text.rotate(- PI / 32)
+
+
+        # Start mit 0 Transparenz
+        image.set_opacity(0)
+        ieee_text.set_opacity(0)
+
+        # Einblenden
+        self.play(
+            image.animate.set_opacity(1),
+            run_time=1
+        )
+
+        self.wait(6)
+        self.play(ieee_text.animate.set_opacity(1),run_time=0.1)
+
+        self.wait(3)
+
+        # Ausblenden
+        self.play(
+            image.animate.set_opacity(0),
+            ieee_text.animate.set_opacity(0),
+            run_time=1
+        )
 

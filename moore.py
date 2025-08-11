@@ -22,9 +22,9 @@ class ExponentialGraph(Scene):
 
         # Animate
         self.play(Create(axes), Write(labels))
-        self.wait(2)
+        self.wait(1.5)
         self.play(Create(graph), Write(graph_label))
-        self.wait(2)
+        self.wait(3.5)
 
         # Fade out all elements
         self.play(
