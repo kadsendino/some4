@@ -153,11 +153,21 @@ class ClosurePlots(Scene):
         self.wait(2)
         #x*y
         txt_3d_2 = MathTex(r"x \cdot y")
-        Closure_3d_2 = ImageMobject("data/placeholder.png").scale_to_fit_height(config.frame_height).scale(0.7).shift(DOWN*0.1)
-        txt_3d_2.next_to(Closure_3d_2, UP)
-        self.play(Write(txt_3d_2), FadeIn(Closure_3d_2))
+
+        img_left = ImageMobject("data/multiplication_f16.png").scale_to_fit_height(config.frame_height).scale(0.7)
+        img_right = ImageMobject("data/multiplication_p16.png").scale_to_fit_height(config.frame_height).scale(0.7)
+
+        gap_size = 1  # adjust this to increase/decrease space
+        img_left.shift(LEFT * (img_left.width/2 + gap_size/2))
+        img_right.shift(RIGHT * (img_right.width/2 + gap_size/2))
+
+        images_group = Group(img_left, img_right).shift(DOWN * 0.1)
+
+        txt_3d_2.next_to(images_group, UP)
+
+        self.play(Write(txt_3d_2), FadeIn(images_group))
         self.wait(5)
-        self.play(Uncreate(txt_3d_2), FadeOut(Closure_3d_2))
+        self.play(Uncreate(txt_3d_2), FadeOut(images_group))
         self.wait(2)
         # x/y
         txt_3d_3 = MathTex(r"\frac{x}{y}")

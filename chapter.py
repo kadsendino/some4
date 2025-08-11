@@ -39,7 +39,7 @@ class ImageTest(Scene):
     def construct(self):
         img  = ImageMobject("data/floats.png").scale_to_fit_height(config.frame_height).scale(0.28).to_edge(LEFT)
         img2 = ImageMobject("data/posits.png").scale_to_fit_height(config.frame_height).scale(0.28)
-        img3 = ImageMobject("data/posits.png").scale_to_fit_height(config.frame_height).scale(0.28).to_edge(RIGHT)
+        img3 = ImageMobject("data/compare.png").scale_to_fit_height(config.frame_height).scale(0.28).to_edge(RIGHT)
 
 
         padding = 0.075
