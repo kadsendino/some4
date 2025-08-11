@@ -1,9 +1,0 @@
-{
-  "pythonVersion": "3.11",
-  "pythonPlatform": "Linux",
-  "venvPath": "/home/maximilian//.cache/uv",
-  "venv": ".venv", 
-  "reportMissingImports": false,
-  "reportUndefinedVariable": false
-}
-
