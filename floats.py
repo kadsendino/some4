@@ -120,7 +120,7 @@ def create_bin_index_list(ind : int,bias=0):
 
 
 
-class IndexRadix(Scene):
+class IndexRadixTEST(Scene):
     def construct(self):
         binary_str = "010001010100"
         ind = 5
@@ -144,7 +144,7 @@ class IndexRadix(Scene):
         
 
 
-class BitBlocks(Scene):
+class BitBlocksTEST(Scene):
     def construct(self):
         binary_str = "0100010101001010"
         float_block_array, float_text_array, float_block_group = create_float(binary_str, sign_bit = True)
@@ -171,9 +171,10 @@ class FixedPoint(Scene):
         arrow_dis.move_to(arrow.get_center()).shift(UP*0.5)
         g1 = VGroup(point,arrow,arrow_dis).shift(DOWN*2)
         self.play(FadeIn(g1))
-        self.play(FadeOut(arrow,arrow_dis))
-
         self.wait(5)
+
+        self.play(FadeOut(arrow,arrow_dis))
+        self.wait(2)
         
         # Morph Radix into binary number
         bin_num1 = Text("010101010101000")
@@ -185,35 +186,50 @@ class FixedPoint(Scene):
         self.play(Transform(point,g1,replace_mobject_with_target_in_scene=True),FadeOut(bin_num))
         #arrow = always_redraw(lambda : Arrow(start= p1.get_center()+DOWN*2,end=p1.get_center()+0.5*DOWN,color=RED))
         self.play(Uncreate(txt1))
-        self.wait(2)
+        self.wait(7)
 
         bin_str = "010101010101000001010101010110"
         num = Text("10920.16668...")
         num.shift(DOWN*2)
         self.play(Create(num))
-        self.wait(2)
+        self.wait(10)
+        question = Text("Where would you place the radix point?").shift(UP*2)
+        self.play(Create(question))
+        self.wait(5)
+        self.play(FadeOut(question))
         # Transform to front radix point
         lastgroup = g1
         lastnum = num
         num = Text("10.66422...")
         num.shift(DOWN*2)
-        array,group = create_binary_radix(bin_str,5)
-        self.play(Transform(lastgroup,group,replace_mobject_with_target_in_scene=True,run_time=1),
+        bin_num1 = Text("01010")
+        p1 = Text(".")
+        bin_num2 = Text("1010101000001010101010110")
+        bin_num2.next_to(bin_num1,buff=0.15)
+        p1.next_to(bin_num1,buff=0.05).shift(DOWN*0.2)
+        g2 = VGroup(bin_num1,p1,bin_num2).center()
+        self.play(Transform(lastgroup,g2,replace_mobject_with_target_in_scene=True,run_time=1),
                   Transform(lastnum,num,replace_mobject_with_target_in_scene=True,run_time=1)
                  )
-        self.wait(2.5)
+        self.wait(10)
         # Transform to back radix point
-        lastgroup = group
+        lastgroup = g2
         lastnum = num
         num = Text("11182250.6875")
         num.shift(DOWN*2)
-        array,group = create_binary_radix(bin_str,25)
-        self.play(Transform(lastgroup,group,replace_mobject_with_target_in_scene=True,run_time=1),
+        bin_num1 = Text("0101010101010000010101010")
+        p1 = Text(".")
+        bin_num2 = Text("10110")
+        bin_num2.next_to(bin_num1,buff=0.15)
+        p1.next_to(bin_num1,buff=0.05).shift(DOWN*0.2)
+        g3 = VGroup(bin_num1,p1,bin_num2).center()
+        self.play(Transform(lastgroup,g3,replace_mobject_with_target_in_scene=True,run_time=1),
                   Transform(lastnum,num,replace_mobject_with_target_in_scene=True,run_time=1)
                  )
-        self.wait(2.5)
-
-
+        self.wait(5)
+        self.play(FadeOut(num))
+        self.wait(1)
+        self.play(Create(Text("?").set_color(BLUE).shift(DOWN*2)))
         self.wait(2)
 
 class Float_Concept(Scene):

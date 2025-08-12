@@ -97,11 +97,11 @@ class Float_Example1(Scene):
         # 10.75 in binary
         num = MathTex("10.75")
         self.play(Write(num))
-        self.wait(5)
+        self.wait(7)
         # Binary representation
         binary = MathTex("1010.11")
         self.play(Transform(num, binary))
-        self.wait(2)
+        self.wait(4)
         # Normalized form
         num_new, count = self.shifting_num(num)
         self.wait(2)
@@ -130,6 +130,7 @@ class Float_Example1(Scene):
         brace = Brace(group_filled_up, direction=DOWN)
         brace_text = Text(str(len(shifted_text)) + " bits", font_size=50).next_to(brace, DOWN)
         self.play(GrowFromCenter(brace), FadeIn(brace_text), run_time=1)
+        self.wait(5)
         for i in range(10 - len(shifted_text)):
             zero = MathTex("0").next_to(group_filled_up, RIGHT, buff=0.05)
             group_filled_up.add(zero)
@@ -158,6 +159,7 @@ class Float_Example1(Scene):
         characteristic.set_color_by_tex("15", GREEN)
         characteristic.set_color_by_tex("18",YELLOW)
         self.play(Write(characteristic))
+        self.wait(10)
         bias = characteristic.get_parts_by_tex("15")
         arrow = Arrow(start=UP, end=DOWN, color=GREEN).scale(0.5).next_to(bias, UP)
         text_bias = MathTex("bias").set_color(GREEN).next_to(arrow, UP)
@@ -170,7 +172,7 @@ class Float_Example1(Scene):
         # Convert to binary
         bin_char = MathTex("10010").set_color(YELLOW)
         self.play(Transform(characteristic, bin_char, replace_mobject_with_target_in_scene=True))
-        self.wait(2)
+        self.wait(7)
         # move exponent to right place
         exponent_group = VGroup(*[txt for sq, txt in exponent])
         exponent_group.set_opacity(1)
