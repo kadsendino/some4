@@ -186,7 +186,7 @@ class ComparePart2(Scene):
         self.wait(5)
         self.play(Uncreate(head_1))
         # slide 22
-        img_fpga = ImageMobject("data/placeholder.png").scale_to_fit_height(config.frame_height).scale(0.6)
+        img_fpga = ImageMobject("data/FPGA.jpg").scale_to_fit_height(config.frame_height).scale(0.6)
         txt_fpga = Text("Field Programmable Gate Array").scale(0.5).next_to(img_fpga, DOWN)
         self.play(FadeIn(img_fpga), Write(txt_fpga))
         self.wait(20)
